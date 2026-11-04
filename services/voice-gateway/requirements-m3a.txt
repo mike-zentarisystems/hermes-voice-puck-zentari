@@ -1,0 +1,5 @@
+faster-whisper==1.2.1
+piper-tts==1.8.0
+numpy==2.3.3
+# Already required by faster-whisper; pin the directly used audio resampler.
+av==19.0.1

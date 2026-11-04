@@ -1,0 +1,17 @@
+# Interactive UI shell overlay (lab).
+# Enables ZV_UI_SHELL_MODE, which selects ZV_M0_ACCEPTANCE_MODE so the positional
+# display challenge still runs before the operator sees anything.
+#
+# This is a different overlay from sdkconfig.ui.defaults, which turns on the
+# fixed eight-state walkthrough (ZV_UI_ACCEPTANCE_MODE). The shell replaces that
+# walkthrough rather than running alongside it.
+CONFIG_ZV_UI_SHELL_MODE=y
+
+# One repaint per minute: the clock is the only chrome that moves on its own.
+CONFIG_ZV_UI_REPAINT_PERIOD_MS=60000
+
+# POSIX TZ applied with setenv("TZ", ..., 1) + tzset() before the first clock
+# render. US Eastern with daylight saving. Change per shipping region.
+CONFIG_ZV_UI_TZ="EST5EDT,M3.2.0,M11.1.0"
+
+CONFIG_ZV_UI_DEFAULT_VOLUME=40

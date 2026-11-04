@@ -1,0 +1,522 @@
+menu "Zentari Voice Puck"
+
+    config ZV_M0_ACCEPTANCE_MODE
+        bool "Enable bounded M0 display/touch acceptance mode"
+        default n
+        help
+            Fail-closed by default. When disabled, app_main preserves the
+            intentional ZV_ERR_HARDWARE_GATE and does not initialize Rev2
+            display, touch, audio, network, gateway, Hermes, credentials, OTA,
+            eFuse, erase, or other destructive actions.
+
+            When enabled, firmware initializes only the verified Rev2 display,
+            backlight, and CST816 touch path from the pinned Waveshare source
+            revision 8ead4a96bf3a278fc4ebd8ef4768657e17fa2880, then renders
+            visible display feedback and logs touch coordinates. This is a lab
+            acceptance aid, not production acceptance by itself.
+
+    if ZV_M0_ACCEPTANCE_MODE
+
+        config ZV_M0_DISPLAY_CONFIRM_ROUNDS
+            int "M0 display confirmation rounds (0 disables)"
+            range 0 4
+            default 2
+            help
+                Number of positional challenge rounds the operator must pass
+                before M0 will claim the display renders.
+
+                Each round paints a white marker in a randomly chosen cell of a
+                3x3 grid and requires a touch in that cell. The target is never
+                written to the log before the touch is read, so an operator
+                watching the serial output cannot satisfy a round without
+                actually seeing the panel. Two rounds put a blind guess at
+                1 in 81.
+
+                Set to 0 to fall back to the old behaviour, where M0 checks only
+                that LCD transport calls returned ESP_OK and reports display
+                rendering as unverified.
+
+        config ZV_M0_DISPLAY_RELEASE_TIMEOUT_MS
+            int "M0 display confirmation release timeout between rounds (ms)"
+            range 1000 30000
+            default 5000
+            help
+                Each round must be answered by its own separate press. Before a
+                round paints its marker it waits for the panel to report no
+                touch; if a finger is still down after this long the round
+                fails. Without it a held or dragged finger answers the next
+                round the instant it is drawn, which makes the rounds
+                dependent and collapses a two-round guess from 1 in 81 to
+                1 in 9.
+
+        config ZV_M0_DISPLAY_CONFIRM_TIMEOUT_MS
+            int "M0 display confirmation timeout per round (ms)"
+            range 2000 60000
+            default 20000
+            help
+                Time allowed for the operator to answer one challenge round.
+
+    endif
+
+    config ZV_M1_ACCEPTANCE_MODE
+        bool "Enable bounded M1 audio acceptance mode"
+        default n
+        select ZV_M0_ACCEPTANCE_MODE
+        help
+            Fail-closed by default and built on top of M0, which it selects.
+            The M0 display/backlight/touch gate therefore runs first, so a
+            physically present operator has confirmed the unit before the
+            amplifier is ever enabled.
+
+            When enabled, firmware additionally probes ES7210 and ES8311 on the
+            shared I2C bus, brings up duplex I2S using the pinned Waveshare
+            revision 8ead4a96bf3a278fc4ebd8ef4768657e17fa2880 pins, clocks and
+            slot format, measures bounded microphone activity without
+            recording, storing, transmitting or retaining audio, and only on a
+            passing microphone measurement plays one finite low-volume
+            diagnostic tone through the NS4150B.
+
+            The amplifier is disabled by default and is driven off again on
+            every success and every error path. Network, gateway, Hermes,
+            credentials, OTA/eFuse, erase, and other destructive operations
+            remain gated, and the platform ready flag stays false.
+
+    if ZV_M1_ACCEPTANCE_MODE
+
+        config ZV_M1_MIC_WINDOW_MS
+            int "M1 microphone activity window (ms)"
+            range 1000 60000
+            default 15000
+            help
+                Bounded window in which microphone activity must be observed.
+                A run that sees no activity returns ESP_ERR_TIMEOUT, does not
+                play a tone, and does not pass the M1 gate.
+
+        config ZV_M1_MIC_SETTLE_MS
+            int "M1 microphone settling time before activity is evaluated (ms)"
+            range 0 2000
+            default 300
+            help
+                Capture blocks read and discarded after the ES7210 is opened,
+                before any activity measurement begins. The codec emits a large
+                transient immediately after open which would otherwise satisfy
+                the activity floor before the operator makes any sound, passing
+                the gate on an artifact rather than on real acoustic input.
+
+        config ZV_M1_MIC_ACTIVE_BLOCKS
+            int "M1 microphone active blocks required to pass"
+            range 1 400
+            default 25
+            help
+                Number of capture blocks that must exceed the activity floor
+                before the microphone stage passes. Blocks are about 16 ms, so
+                the default asks for roughly 400 ms of sound.
+
+                A single block is not enough: tapping the enclosure, or simply
+                handling the puck while finishing the display challenge,
+                produces a transient that clears the floor for one or two
+                blocks. Requiring an accumulated total keeps the gate on
+                intentional sound without demanding it be continuous.
+
+        config ZV_M1_MIC_FLOOR_PERMILLE
+            int "M1 microphone activity floor (permille of full scale)"
+            range 1 1000
+            default 20
+            help
+                Per-block RMS at or above which the microphone stage passes.
+                Raise this if ambient noise alone satisfies the gate.
+
+        config ZV_M1_TONE_HZ
+            int "M1 diagnostic tone frequency (Hz)"
+            range 100 7000
+            default 440
+            help
+                Frequency of the single finite diagnostic tone.
+
+        config ZV_M1_TONE_MS
+            int "M1 diagnostic tone duration (ms)"
+            range 100 2000
+            default 600
+            help
+                Duration of the single finite diagnostic tone. The generator
+                additionally clamps this to ZV_AUDIO_TONE_MAX_DURATION_MS.
+
+        config ZV_M1_TONE_AMPLITUDE_PERMILLE
+            int "M1 diagnostic tone amplitude (permille of full scale)"
+            range 1 200
+            default 60
+            help
+                Digital amplitude of the diagnostic tone. The generator clamps
+                this to ZV_AUDIO_TONE_MAX_AMPLITUDE_PERMILLE (200) regardless
+                of what is configured here, and applies a fade at both edges.
+
+        config ZV_M1_PLAYBACK_VOLUME
+            int "M1 ES8311 output volume"
+            range 0 60
+            default 20
+            help
+                ES8311 output volume for the diagnostic tone. Deliberately
+                below the upstream PLAYER_VOLUME of 50; this is a bounded
+                hardware diagnostic, not playback.
+
+    endif
+
+    config ZV_UI_ACCEPTANCE_MODE
+        bool "Enable bounded eight-state UI acceptance mode"
+        default n
+        select ZV_M0_ACCEPTANCE_MODE
+        help
+            Fail-closed by default and built on top of M0, which it selects.
+            After the M0 positional display challenge, firmware paints every
+            avatar UI state (idle, listening, thinking, speaking, executing,
+            success, error, approval) plus the menu overlay through the
+            procedural painter. Each screen is held until the operator taps
+            the panel, so a state cannot be skipped without looking at it.
+
+            Network, gateway, Hermes, credentials, OTA/eFuse, erase, and
+            other destructive operations remain gated, and the platform ready
+            flag stays false.
+
+    config ZV_UI_SHELL_MODE
+        bool "Enable the interactive menu shell"
+        default n
+        select ZV_M0_ACCEPTANCE_MODE
+        help
+            Fail-closed by default and built on top of M0, which it selects.
+            Replaces the fixed eight-state walkthrough with a shell the operator
+            actually drives: tap home for a focus ring, swipe to move it, tap a
+            row to act.
+
+            The shell owns a volume screen, a mute toggle that remembers the
+            level across mute rather than zeroing it, and a RESTART row that
+            opens an ARE YOU SURE screen. The confirm screen is the only path to
+            esp_restart(); a single stray tap cannot bounce the device. Hold the
+            home corner to leave the shell so an acceptance run can finish.
+
+            The clock is the only chrome that changes without input, so it
+            repaints on ZV_UI_REPAINT_PERIOD_MS. Input always repaints
+            immediately and does not reset that cadence, which keeps the clock
+            at most one period stale.
+
+            Network, gateway, Hermes, credentials, OTA/eFuse and erase remain
+            gated. Volume and mute are device state the shell owns and displays;
+            driving the ES8311 codec from them belongs with playback work and is
+            not wired here.
+
+    if ZV_UI_SHELL_MODE || ZV_M3A_VOICE_MODE
+
+        config ZV_UI_REPAINT_PERIOD_MS
+            int "UI shell repaint period (ms)"
+            range 1000 3600000
+            default 60000
+            help
+                How often the shell repaints when nothing is being touched, so
+                the clock advances. 60000 ms is one minute. Clamped up to 1000 ms
+                in code; the period cannot be shortened to make the clock look
+                responsive at the cost of redraw churn.
+
+        config ZV_UI_TZ
+            string "UI shell timezone (POSIX TZ string)"
+            default "EST5EDT,M3.2.0,M11.1.0"
+            help
+                Applied with setenv("TZ", ..., 1) and tzset() before the first
+                clock render. SNTP delivers UTC seconds, so without this the
+                panel would show UTC and be wrong by the offset for part of the
+                year.
+
+                The default is US Eastern with daylight saving: EST is UTC-5,
+                EDT applies from the second Sunday in March to the first Sunday
+                in November. Use a fixed zone with no DST (for example UTC0) in
+                regions that do not observe it, or set your own region. This is
+                a build variable so a unit ships configured, not patched.
+
+        config ZV_UI_DEFAULT_VOLUME
+            int "UI shell startup volume (0..100)"
+            range 0 100
+            default 40
+            help
+                Level the shell starts with, on the same 0..100 scale the volume
+                screen and the indicator both use. Mute is separate state and is
+                always off at boot.
+
+    endif
+
+    config ZV_M1_SOAK_MODE
+        bool "Enable bounded 60-minute M1 soak after audio acceptance"
+        default n
+        select ZV_M1_ACCEPTANCE_MODE
+        help
+            Fail-closed by default and built on top of M1, which it selects.
+            After M0 and M1 pass, firmware loops duplex I2S capture slices
+            (audio discarded, never retained) and periodic low-volume
+            diagnostic tones for the configured duration, sampling internal
+            heap, DMA headroom, and the battery path.
+
+            Duration is clamped in code to 60 seconds .. 2 hours; the default
+            is 3600000 ms (60 minutes). The soak fails on any I2S transfer
+            error, on internal free or largest DMA block falling below hard
+            floors, or if the amplifier is not disabled at exit. Platform
+            ready stays false; network, gateway, Hermes, credentials,
+            OTA/eFuse, and erase remain gated.
+
+    if ZV_M1_SOAK_MODE
+
+        config ZV_M1_SOAK_DURATION_MS
+            int "Soak duration (ms)"
+            range 60000 7200000
+            default 3600000
+            help
+                Wall-clock soak length. Out-of-range values are replaced by
+                3600000 in code.
+
+        config ZV_M1_SOAK_REPORT_PERIOD_MS
+            int "Soak sample period (ms)"
+            range 1000 600000
+            default 30000
+            help
+                How often to log heap/DMA/battery samples during the soak.
+
+        config ZV_M1_SOAK_TONE_PERIOD_MS
+            int "Soak diagnostic tone period (ms)"
+            range 10000 600000
+            default 120000
+            help
+                How often to play one finite low-volume tone through the
+                NS4150B (amplifier on only for that tone, then off).
+
+        config ZV_M1_SOAK_CAPTURE_SLICE_MS
+            int "Soak capture slice (ms)"
+            range 16 2000
+            default 160
+            help
+                Length of each continuous capture window. Samples are zeroed
+                after every slice; nothing is retained.
+
+    endif
+
+    config ZV_M2_PROVISION_MODE
+        bool "Enable bounded M2 provisioning acceptance"
+        default n
+        select ZV_M0_ACCEPTANCE_MODE
+        help
+            Fail-closed by default and built on top of M0, which it selects.
+            After the display challenge, requires a continuous physical touch
+            hold, then installs an inert lab fixture credential into encrypted
+            NVS, reloads and validates it, exercises staged rotation including
+            refusal of a replayed generation, and erases the namespace.
+
+            Secret material is never logged. Network, gateway, Hermes, OTA,
+            eFuse, and erase of production partitions remain gated. Platform
+            ready stays false. Flash encryption and Secure Boot V2 are still
+            required before this storage path is production-grade.
+
+    config ZV_M2_WSS_MODE
+        bool "Enable bounded M2 WSS acceptance (mock/live gateway)"
+        default n
+        select ZV_M0_ACCEPTANCE_MODE
+        help
+            Fail-closed by default and built on top of M0. Joins the configured
+            STA network, policy-checks a wss:// gateway origin, opens a TLS
+            WebSocket with the certificate bundle and hostname verification,
+            sends device.hello, and requires a non-empty reply within a bounded
+            window. Platform ready stays false.
+
+    config ZV_VOICE_POWER_SAVING
+        bool "Adaptive voice idle power saving"
+        depends on ZV_M3A_VOICE_MODE && !FREERTOS_SMP
+        default y
+        select PM_ENABLE
+        help
+            Use 80..240 MHz frequency scaling, preserving 240 MHz and disabling
+            Wi-Fi modem sleep throughout active voice turns and TLS connection.
+            Idle uses minimum modem sleep and an inactivity backlight timeout.
+            Automatic light sleep is deliberately disabled pending wakeup tests.
+            Disable to restore the previous fixed-frequency, bright-idle policy.
+            ESP-IDF's normal dual-core kernel is supported. FREERTOS_SMP names
+            the separate experimental Amazon kernel, which PM_ENABLE excludes;
+            this dependency does not require FREERTOS_UNICORE.
+
+    if ZV_VOICE_POWER_SAVING
+        config ZV_VOICE_AWAKE_BRIGHTNESS
+            int "Awake backlight percent"
+            range 10 100
+            default 35
+        config ZV_VOICE_DIM_BRIGHTNESS
+            int "Idle dim backlight percent"
+            range 1 10
+            default 8
+        config ZV_VOICE_DIM_AFTER_SECONDS
+            int "Dim after idle seconds"
+            range 10 600
+            default 30
+    endif
+
+    config ZV_VOICE_STARTUP_DIAGNOSTICS
+        bool "Run display/touch acceptance challenge on voice startup"
+        depends on ZV_M3A_VOICE_MODE
+        default n
+        help
+            Enable only for attended hardware diagnostics. Normal voice boots
+            initialize and check the display and touch controller without
+            waiting for taps. This does not certify physical display acceptance.
+            Standalone M0/M1/M2 acceptance builds retain their existing challenge.
+
+    config ZV_M3A_VOICE_MODE
+        bool "Enable bounded M3a authenticated push-to-talk voice turn"
+        default n
+        select ZV_M1_ACCEPTANCE_MODE
+        select ZV_M2_WSS_MODE
+        help
+            Reuses the accepted M2 TLS/HMAC session and Rev2 audio driver.
+            The M1 diagnostic does not run in this mode. Input is capped at
+            15 seconds and the gateway must enforce the read-only Hermes gate.
+            This mode is for operator acceptance; platform ready stays false.
+
+    config ZV_M2_LINK_SOAK_MODE
+        bool "Enable bounded M2 reconnect/fault soak"
+        default n
+        select ZV_M2_WSS_MODE
+        help
+            Default OFF. Keeps the fail-closed WSS acceptance client running
+            for a bounded interval so an operator can stop/start the gateway,
+            remove/restore Wi-Fi, reject TLS, and force repeated disconnects.
+            The link supervisor owns every reconnect attempt, including
+            bounded jittered backoff and circuit-breaker probes. Platform ready
+            remains false and no application action is enabled by this mode.
+
+    if ZV_M2_WSS_MODE
+
+        config ZV_M2_LAB_CA
+            bool "Trust embedded certs/lab_ca.pem instead of the public CRT bundle"
+            default n
+            help
+                Lab-only. When enabled the WebSocket client pins the PEM in
+                certs/lab_ca.pem (generated by tools/setup_m2wss.py) and does
+                not attach the public certificate bundle. Required for a
+                self-signed mock gateway. Leave off for production CAs.
+
+        config ZV_M2_WIFI_SSID
+            string "M2 Wi-Fi SSID (lab)"
+            default ""
+            help
+                Lab STA SSID. Empty fails closed. Do not commit a real SSID
+                into sdkconfig.defaults; put it in a local overlay.
+
+        config ZV_M2_WIFI_PASSWORD
+            string "M2 Wi-Fi password (lab)"
+            default ""
+            help
+                Lab STA password. Empty is allowed for open networks only.
+
+        config ZV_M2_GATEWAY_ORIGIN
+            string "M2 gateway origin (wss://host[:port]/path)"
+            default "wss://gateway.invalid/ws"
+            help
+                Must parse under zv_gateway_parse_origin (wss only, no
+                credentials/query/fragment). Point this at your mock or live
+                gateway for acceptance.
+
+        config ZV_M2_LINK_SOAK_DURATION_MS
+            int "M2 reconnect/fault soak duration (ms)"
+            range 60000 7200000
+            default 900000
+            depends on ZV_M2_LINK_SOAK_MODE
+            help
+                Wall-clock duration of the operator-driven network fault soak.
+                The default is 15 minutes; production evidence should use the
+                duration documented in HANDOFF-M2.md.
+
+    endif
+
+    config ZV_M3_APPROVAL_MODE
+        bool "Enable bounded M3 Hermes approval crypto acceptance"
+        default n
+        select ZV_M0_ACCEPTANCE_MODE
+        help
+            Fail-closed by default and built on top of M0, which it selects.
+            Runs the ES256 known-answer self-test against the committed
+            TEST-ONLY vector: a genuine signed approval must verify, and a
+            mutated action, a tampered signature, a replayed nonce, an unknown
+            kid, an expired request, and a retired key must each fail closed.
+
+            This proves the mbedtls verifier and the zv_core approval gate work
+            on real hardware. It does NOT prove a live Citadel approval flow:
+            no Hermes action is executed, no gateway audit is correlated, and
+            the platform ready flag stays false. Deliberately independent of
+            ZV_M2_WSS_MODE, because the crypto path is local and must stay
+            provable without a gateway.
+
+        config ZV_M3_APPROVAL_KAT
+            bool "Run the M3 approval known-answer self-test"
+            default y
+            depends on ZV_M3_APPROVAL_MODE
+            help
+                Run zv_hermes_selftest() at boot. Disable only when
+                re-running an unrelated gate.
+
+    config ZV_M4_OTA_MODE
+        bool "Enable bounded M4 signed A/B OTA acceptance"
+        default n
+        select ZV_M0_ACCEPTANCE_MODE
+        depends on ZV_M2_WSS_MODE
+        help
+            Fail-closed by default and built on top of M0, which it selects.
+            Applies the pre-download manifest policy, downloads one image with
+            esp_https_ota over TLS with hostname verification, accounts every
+            byte through the zv_ota_slot_t state machine, reads the written
+            image back out of flash and re-hashes it, and calls
+            esp_ota_set_boot_partition ONLY when the SHA-256 matched.
+
+            Firmware never reboots on its own: staging an image is not the same
+            as accepting it. Platform ready stays false, Secure Boot V2 and
+            flash encryption remain required before production, and security
+            eFuses must never be burned from automation or during development.
+
+    if ZV_M4_OTA_MODE
+
+        config ZV_M4_OTA_URL
+            string "M4 OTA image URL"
+            default "https://ota.invalid/zentari-voice-puck.bin"
+            help
+                https:// origin only. The client verifies the certificate chain
+                and hostname; a lab host needs its own CA rather than a skipped
+                check. Leave at the .invalid default to fail closed.
+
+        config ZV_M4_OTA_VERSION
+            string "M4 OTA candidate version (MAJOR.MINOR.PATCH)"
+            default "0.0.0"
+            help
+                Must be strictly newer than the running version or the
+                pre-download policy rejects the update.
+
+        config ZV_M4_OTA_CHANNEL
+            string "M4 OTA channel"
+            default "stable"
+            help
+                Must match the device channel exactly.
+
+        config ZV_M4_OTA_SHA256
+            string "M4 OTA candidate SHA-256 (64 lower-case hex)"
+            default "0000000000000000000000000000000000000000000000000000000000000000"
+            help
+                The digest the downloaded image must match before the boot
+                partition is staged. All-zero fails closed by default.
+
+        config ZV_M4_OTA_SECURE_VERSION
+            int "M4 OTA candidate secure version"
+            range 0 65535
+            default 2
+            help
+                Rejected when below the anti-rollback floor burned in eFuse.
+
+        config ZV_M4_OTA_IMAGE_SIZE
+            int "M4 OTA candidate image size (bytes)"
+            range 1 5242880
+            default 3145728
+            help
+                Pre-gate only. The real size is read from the download and must
+                not exceed the inactive partition.
+
+    endif
+
+endmenu

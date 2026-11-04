@@ -1,0 +1,626 @@
+{
+  "board_id": "waveshare-esp32-s3-touch-lcd-1.85c-box-rev2",
+  "header": "components/zv_board/include/zv_board_pins.h",
+  "upstream": {
+    "repository": "https://github.com/waveshareteam/ESP32-S3-Touch-LCD-1.85C",
+    "commit": "8ead4a96bf3a278fc4ebd8ef4768657e17fa2880",
+    "project": "ESP-IDF/ESP32-S3-Touch-LCD-1.85C-Test",
+    "schematic": "hardware/schematics/ESP32-S3-Touch-LCD-1.85C-V2--Schematic.pdf_.pdf",
+    "schematic_sha256": "88f11c93958fbda384ef7bf825924c4b8cd663052bd37c215f2f9a053c981c3a"
+  },
+  "status_legend": {
+    "source-verified": "Value appears in upstream source at the pinned revision; not yet confirmed on hardware.",
+    "schematic-verified": "Value appears in the V2 schematic text layer; not yet confirmed on hardware.",
+    "library-default": "Value is the ESP-IDF component default the vendor code relies on; confirm with I2C scan."
+  },
+  "constants": [
+    {
+      "macro": "ZV_PIN_I2C_SCL",
+      "value": 10,
+      "status": "source-verified",
+      "gate": "HW-I2C-01",
+      "sources": [
+        {
+          "path": "components/auido_borad/boards/include/ESP32_S3_AUDIO_Board.h",
+          "text": "#define GPIO_I2C_SCL    (GPIO_NUM_10)"
+        }
+      ]
+    },
+    {
+      "macro": "ZV_PIN_I2C_SDA",
+      "value": 11,
+      "status": "source-verified",
+      "gate": "HW-I2C-01",
+      "sources": [
+        {
+          "path": "components/auido_borad/boards/include/ESP32_S3_AUDIO_Board.h",
+          "text": "#define GPIO_I2C_SDA    (GPIO_NUM_11)"
+        }
+      ]
+    },
+    {
+      "macro": "ZV_I2C_ADDR_CST816",
+      "value": 21,
+      "status": "source-verified",
+      "gate": "HW-I2C-01",
+      "sources": [
+        {
+          "path": "main/Touch_Driver/CST816.h",
+          "text": "#define ESP_LCD_TOUCH_IO_I2C_CST816S_ADDRESS    (0x15)"
+        }
+      ]
+    },
+    {
+      "macro": "ZV_I2C_ADDR_TCA9554",
+      "value": 32,
+      "status": "source-verified",
+      "gate": "HW-I2C-01",
+      "sources": [
+        {
+          "path": "main/EXIO/TCA9554PWR.h",
+          "text": "#define TCA9554_ADDRESS             0x20"
+        }
+      ]
+    },
+    {
+      "macro": "ZV_I2C_ADDR_PCF85063",
+      "value": 81,
+      "status": "source-verified",
+      "gate": "HW-I2C-01",
+      "sources": [
+        {
+          "path": "main/PCF85063/PCF85063.h",
+          "text": "#define PCF85063_ADDRESS   (0x51)"
+        }
+      ]
+    },
+    {
+      "macro": "ZV_I2C_ADDR_ES8311",
+      "value": 24,
+      "status": "schematic-verified",
+      "gate": "HW-I2C-01",
+      "sources": [
+        {
+          "path": "components/auido_borad/boards/ESP32_S3_AUDIO_Board/bsp_board.c",
+          "text": "audio_codec_i2c_cfg_t i2c_cfg = {.addr = ES8311_CODEC_DEFAULT_ADDR,.bus_handle = i2c_handle};"
+        },
+        {
+          "path": "managed_components/espressif__esp_codec_dev/device/include/es8311_codec.h",
+          "text": "#define ES8311_CODEC_DEFAULT_ADDR (0x30)"
+        }
+      ],
+      "schematic_tokens": [
+        "ES8311_I2C_ADD"
+      ],
+      "note": "0x30 >> 1 = 0x18 7-bit, which matches the V2 schematic note ES8311_I2C_ADD: 0x18."
+    },
+    {
+      "macro": "ZV_I2C_ADDR_ES7210",
+      "value": 64,
+      "status": "source-verified",
+      "gate": "HW-I2C-01",
+      "sources": [
+        {
+          "path": "components/auido_borad/boards/ESP32_S3_AUDIO_Board/bsp_board.c",
+          "text": "audio_codec_i2c_cfg_t i2c_cfg = {.addr = ES7210_CODEC_DEFAULT_ADDR,.bus_handle = i2c_handle};"
+        },
+        {
+          "path": "managed_components/espressif__esp_codec_dev/device/include/es7210_adc.h",
+          "text": "#define ES7210_CODEC_DEFAULT_ADDR (0x80)"
+        }
+      ],
+      "note": "0x80 is the 8-bit form used by esp_codec_dev; 0x80 >> 1 = 0x40 is the 7-bit address this repository probes. Confirmed against esp_codec_dev 1.6.2 resolved by dependencies.lock."
+    },
+    {
+      "macro": "ZV_PIN_LCD_QSPI_SCK",
+      "value": 40,
+      "status": "source-verified",
+      "gate": "HW-LCD-01",
+      "sources": [
+        {
+          "path": "main/LCD_Driver/ST77916.h",
+          "text": "#define ESP_PANEL_LCD_SPI_IO_SCK            (40)"
+        }
+      ]
+    },
+    {
+      "macro": "ZV_PIN_LCD_QSPI_D0",
+      "value": 46,
+      "status": "source-verified",
+      "gate": "HW-LCD-01",
+      "sources": [
+        {
+          "path": "main/LCD_Driver/ST77916.h",
+          "text": "#define ESP_PANEL_LCD_SPI_IO_DATA0          (46)"
+        }
+      ]
+    },
+    {
+      "macro": "ZV_PIN_LCD_QSPI_D1",
+      "value": 45,
+      "status": "source-verified",
+      "gate": "HW-LCD-01",
+      "sources": [
+        {
+          "path": "main/LCD_Driver/ST77916.h",
+          "text": "#define ESP_PANEL_LCD_SPI_IO_DATA1          (45)"
+        }
+      ]
+    },
+    {
+      "macro": "ZV_PIN_LCD_QSPI_D2",
+      "value": 42,
+      "status": "source-verified",
+      "gate": "HW-LCD-01",
+      "sources": [
+        {
+          "path": "main/LCD_Driver/ST77916.h",
+          "text": "#define ESP_PANEL_LCD_SPI_IO_DATA2          (42)"
+        }
+      ]
+    },
+    {
+      "macro": "ZV_PIN_LCD_QSPI_D3",
+      "value": 41,
+      "status": "source-verified",
+      "gate": "HW-LCD-01",
+      "sources": [
+        {
+          "path": "main/LCD_Driver/ST77916.h",
+          "text": "#define ESP_PANEL_LCD_SPI_IO_DATA3          (41)"
+        }
+      ]
+    },
+    {
+      "macro": "ZV_PIN_LCD_QSPI_CS",
+      "value": 21,
+      "status": "source-verified",
+      "gate": "HW-LCD-01",
+      "sources": [
+        {
+          "path": "main/LCD_Driver/ST77916.h",
+          "text": "#define ESP_PANEL_LCD_SPI_IO_CS             (21)"
+        }
+      ]
+    },
+    {
+      "macro": "ZV_PIN_LCD_TE",
+      "value": 18,
+      "status": "source-verified",
+      "gate": "HW-LCD-01",
+      "sources": [
+        {
+          "path": "main/LCD_Driver/ST77916.h",
+          "text": "#define ESP_PANEL_LCD_SPI_IO_TE             (18)"
+        }
+      ]
+    },
+    {
+      "macro": "ZV_PIN_LCD_BACKLIGHT",
+      "value": 5,
+      "status": "source-verified",
+      "gate": "HW-BL-01",
+      "sources": [
+        {
+          "path": "main/LCD_Driver/ST77916.h",
+          "text": "#define EXAMPLE_LCD_PIN_NUM_BK_LIGHT        (5)"
+        }
+      ]
+    },
+    {
+      "macro": "ZV_EXIO_LCD_RESET",
+      "value": 2,
+      "status": "source-verified",
+      "gate": "HW-LCD-01",
+      "sources": [
+        {
+          "path": "main/LCD_Driver/ST77916.c",
+          "text": "Set_EXIO(TCA9554_EXIO2,false);"
+        }
+      ]
+    },
+    {
+      "macro": "ZV_EXIO_TOUCH_RESET",
+      "value": 1,
+      "status": "source-verified",
+      "gate": "HW-TP-01",
+      "sources": [
+        {
+          "path": "main/Touch_Driver/CST816.c",
+          "text": "Set_EXIO(TCA9554_EXIO1,false);"
+        }
+      ]
+    },
+    {
+      "macro": "ZV_PIN_TOUCH_INT",
+      "value": 4,
+      "status": "source-verified",
+      "gate": "HW-TP-01",
+      "sources": [
+        {
+          "path": "main/Touch_Driver/CST816.h",
+          "text": "#define I2C_Touch_INT_IO            4"
+        }
+      ],
+      "schematic_tokens": [
+        "TP_INT(GPIO4)"
+      ]
+    },
+    {
+      "macro": "ZV_PIN_I2S_MCLK",
+      "value": 2,
+      "status": "source-verified",
+      "gate": "HW-AUD-OUT-01",
+      "sources": [
+        {
+          "path": "components/auido_borad/boards/include/ESP32_S3_AUDIO_Board.h",
+          "text": "#define GPIO_I2S_MCLK       (GPIO_NUM_2)"
+        }
+      ]
+    },
+    {
+      "macro": "ZV_PIN_I2S_BCLK",
+      "value": 48,
+      "status": "source-verified",
+      "gate": "HW-AUD-OUT-01",
+      "sources": [
+        {
+          "path": "components/auido_borad/boards/include/ESP32_S3_AUDIO_Board.h",
+          "text": "#define GPIO_I2S_SCLK       (GPIO_NUM_48)"
+        }
+      ]
+    },
+    {
+      "macro": "ZV_PIN_I2S_WS",
+      "value": 38,
+      "status": "source-verified",
+      "gate": "HW-AUD-OUT-01",
+      "sources": [
+        {
+          "path": "components/auido_borad/boards/include/ESP32_S3_AUDIO_Board.h",
+          "text": "#define GPIO_I2S_LRCK       (GPIO_NUM_38)"
+        }
+      ]
+    },
+    {
+      "macro": "ZV_PIN_I2S_DOUT",
+      "value": 47,
+      "status": "source-verified",
+      "gate": "HW-AUD-OUT-01",
+      "sources": [
+        {
+          "path": "components/auido_borad/boards/include/ESP32_S3_AUDIO_Board.h",
+          "text": "#define GPIO_I2S_DOUT       (GPIO_NUM_47)"
+        }
+      ]
+    },
+    {
+      "macro": "ZV_PIN_I2S_DIN",
+      "value": 39,
+      "status": "source-verified",
+      "gate": "HW-AUD-IN-01",
+      "sources": [
+        {
+          "path": "components/auido_borad/boards/include/ESP32_S3_AUDIO_Board.h",
+          "text": "#define GPIO_I2S_SDIN       (GPIO_NUM_39)"
+        }
+      ]
+    },
+    {
+      "macro": "ZV_PIN_PA_CTRL",
+      "value": 15,
+      "status": "source-verified",
+      "gate": "HW-AUD-OUT-01",
+      "sources": [
+        {
+          "path": "main/Audio_Driver/Audio_Driver.c",
+          "text": "gpio_set_level(GPIO_NUM_15,1);"
+        }
+      ],
+      "schematic_tokens": [
+        "PA_CTRL",
+        "NS4150B"
+      ],
+      "note": "Upstream drives GPIO15 directly and passes pa_pin = GPIO_PWR_CTRL (-1) to the ES8311 driver, so the codec never owns the amplifier. M1 keeps that ownership in zv_board_pa_enable()."
+    },
+    {
+      "macro": "ZV_PIN_BAT_ADC",
+      "value": 8,
+      "status": "schematic-verified",
+      "gate": "HW-BAT-01",
+      "sources": [
+        {
+          "path": "main/BAT_Driver/BAT_Driver.h",
+          "text": "ADC_CHANNEL_7"
+        }
+      ],
+      "schematic_tokens": [
+        "BAT_ADC(GPIO8)"
+      ]
+    },
+    {
+      "macro": "ZV_BAT_ADC_CHANNEL",
+      "value": 7,
+      "status": "source-verified",
+      "gate": "HW-BAT-01",
+      "sources": [
+        {
+          "path": "main/BAT_Driver/BAT_Driver.h",
+          "text": "ADC_CHANNEL_7"
+        }
+      ]
+    },
+    {
+      "macro": "ZV_BAT_DIVIDER_RATIO",
+      "value": 3,
+      "status": "source-verified",
+      "gate": "HW-BAT-01",
+      "sources": [
+        {
+          "path": "main/BAT_Driver/BAT_Driver.c",
+          "text": "voltage[0][0] * 3.0 / 1000.0"
+        }
+      ]
+    },
+    {
+      "macro": "ZV_LCD_BACKLIGHT_PWM_HZ",
+      "value": 5000,
+      "status": "source-verified",
+      "gate": "HW-BL-01",
+      "sources": [
+        {
+          "path": "main/LCD_Driver/ST77916.c",
+          "text": ".freq_hz = 5000,"
+        }
+      ]
+    },
+    {
+      "macro": "ZV_LCD_PCLK_HZ",
+      "value": 80000000,
+      "status": "source-verified",
+      "gate": "HW-LCD-01",
+      "sources": [
+        {
+          "path": "main/LCD_Driver/ST77916.h",
+          "text": "#define ESP_PANEL_LCD_SPI_CLK_HZ            (80 * 1000 * 1000)"
+        }
+      ]
+    },
+    {
+      "macro": "ZV_LCD_ID_READ_PCLK_HZ",
+      "value": 3000000,
+      "status": "source-verified",
+      "gate": "HW-LCD-01",
+      "sources": [
+        {
+          "path": "main/LCD_Driver/ST77916.c",
+          "text": ".pclk_hz = 3 * 1000 * 1000,"
+        }
+      ]
+    }
+  ],
+  "schematic_parts": [
+    "ESP32-S3R8",
+    "W25Q128JVSI",
+    "ES8311",
+    "ES7210",
+    "NS4150B",
+    "TCA9554PWR",
+    "PCF85063ATL",
+    "ADC_MIC1_P",
+    "ADC_MIC2_P",
+    "ADC_MIC3_P",
+    "AEC"
+  ],
+  "deliberately_unassigned": [
+    {
+      "signal": "TCA9554 EXIO3..EXIO8",
+      "reason": "No function established in upstream source; schematic nets not resolved.",
+      "gate": "HW-EXIO-01"
+    },
+    {
+      "signal": "PCF85063 interrupt (RTC_INT)",
+      "reason": "Destination GPIO/EXIO not established in upstream source.",
+      "gate": "HW-I2C-01"
+    },
+    {
+      "signal": "TF card",
+      "reason": "Not used by this firmware. Upstream SD_MMC.h also defines CONFIG_SD_Card_D3 21, which collides with LCD CS GPIO21; unresolved.",
+      "gate": "none"
+    },
+    {
+      "signal": "User buttons",
+      "reason": "Key1/Key2/SW1 appear in the schematic but no firmware function is established in upstream source.",
+      "gate": "HW-EXIO-01"
+    },
+    {
+      "signal": "bsp_board.c GPIO_MUTE_NUM (GPIO1)",
+      "reason": "Defined but never used upstream; not treated as a mute control.",
+      "gate": "none"
+    }
+  ],
+  "audio_settings": [
+    {
+      "setting": "M1_I2S_PORT",
+      "value": "I2S_NUM_1",
+      "gate": "HW-AUD-IO-01",
+      "sources": [
+        {
+          "path": "components/auido_borad/boards/ESP32_S3_AUDIO_Board/bsp_board.c",
+          "text": "bsp_i2s_init(I2S_NUM_1, 16000, 2, 32);"
+        }
+      ]
+    },
+    {
+      "setting": "M1_SAMPLE_RATE_HZ",
+      "value": 16000,
+      "gate": "HW-AUD-IO-01",
+      "sources": [
+        {
+          "path": "components/auido_borad/boards/ESP32_S3_AUDIO_Board/bsp_board.c",
+          "text": "bsp_codec_init(16000, 16000, 2, 32);"
+        }
+      ]
+    },
+    {
+      "setting": "M1_SLOT_BITS",
+      "value": 32,
+      "gate": "HW-AUD-IO-01",
+      "sources": [
+        {
+          "path": "components/auido_borad/boards/ESP32_S3_AUDIO_Board/bsp_board.c",
+          "text": "bsp_i2s_init(I2S_NUM_1, 16000, 2, 32);"
+        }
+      ]
+    },
+    {
+      "setting": "M1_CHANNELS",
+      "value": 2,
+      "gate": "HW-AUD-IO-01",
+      "sources": [
+        {
+          "path": "components/auido_borad/boards/ESP32_S3_AUDIO_Board/bsp_board.c",
+          "text": "bsp_i2s_init(I2S_NUM_1, 16000, 2, 32);"
+        }
+      ]
+    },
+    {
+      "setting": "i2s_clk_cfg",
+      "value": "I2S_STD_CLK_DEFAULT_CONFIG(16000)",
+      "gate": "HW-AUD-IO-01",
+      "sources": [
+        {
+          "path": "components/auido_borad/boards/include/ESP32_S3_AUDIO_Board.h",
+          "text": ".clk_cfg  = I2S_STD_CLK_DEFAULT_CONFIG(16000),"
+        }
+      ]
+    },
+    {
+      "setting": "i2s_slot_cfg",
+      "value": "I2S_STD_PHILIPS_SLOT_DEFAULT_CONFIG(32, I2S_SLOT_MODE_STEREO)",
+      "gate": "HW-AUD-IO-01",
+      "sources": [
+        {
+          "path": "components/auido_borad/boards/include/ESP32_S3_AUDIO_Board.h",
+          "text": ".slot_cfg = I2S_STD_PHILIPS_SLOT_DEFAULT_CONFIG(32, I2S_SLOT_MODE_STEREO),"
+        }
+      ]
+    },
+    {
+      "setting": "i2s_role",
+      "value": "I2S_ROLE_MASTER",
+      "gate": "HW-AUD-IO-01",
+      "sources": [
+        {
+          "path": "components/auido_borad/boards/ESP32_S3_AUDIO_Board/bsp_board.c",
+          "text": "i2s_chan_config_t chan_cfg = I2S_CHANNEL_DEFAULT_CONFIG(i2s_num, I2S_ROLE_MASTER);"
+        }
+      ]
+    },
+    {
+      "setting": "es7210_mic_selected",
+      "value": "ES7210_SEL_MIC1 | ES7210_SEL_MIC2 | ES7210_SEL_MIC3 | ES7210_SEL_MIC4",
+      "gate": "HW-AUD-IN-01",
+      "sources": [
+        {
+          "path": "components/auido_borad/boards/ESP32_S3_AUDIO_Board/bsp_board.c",
+          "text": ".mic_selected = ES7210_SEL_MIC1 | ES7210_SEL_MIC2 | ES7210_SEL_MIC3 | ES7210_SEL_MIC4,"
+        }
+      ]
+    },
+    {
+      "setting": "M1_RECORD_GAIN_DB",
+      "value": 30.0,
+      "gate": "HW-AUD-IN-01",
+      "sources": [
+        {
+          "path": "components/auido_borad/boards/include/ESP32_S3_AUDIO_Board.h",
+          "text": "#define RECORD_VOLUME   (30.0)"
+        },
+        {
+          "path": "components/auido_borad/boards/ESP32_S3_AUDIO_Board/bsp_board.c",
+          "text": "esp_codec_dev_set_in_channel_gain(record_dev, ESP_CODEC_DEV_MAKE_CHANNEL_MASK(0), RECORD_VOLUME);"
+        }
+      ]
+    },
+    {
+      "setting": "M1_CAPTURE_CHANNEL_COUNT",
+      "value": 4,
+      "gate": "HW-AUD-IN-01",
+      "sources": [
+        {
+          "path": "components/auido_borad/boards/ESP32_S3_AUDIO_Board/bsp_board.c",
+          "text": "#define ADC_I2S_CHANNEL 4"
+        }
+      ]
+    },
+    {
+      "setting": "es8311_codec_mode",
+      "value": "ESP_CODEC_DEV_WORK_MODE_DAC",
+      "gate": "HW-AUD-OUT-01",
+      "sources": [
+        {
+          "path": "components/auido_borad/boards/ESP32_S3_AUDIO_Board/bsp_board.c",
+          "text": ".codec_mode = ESP_CODEC_DEV_WORK_MODE_DAC,"
+        }
+      ]
+    },
+    {
+      "setting": "es8311_use_mclk",
+      "value": false,
+      "gate": "HW-AUD-OUT-01",
+      "sources": [
+        {
+          "path": "components/auido_borad/boards/ESP32_S3_AUDIO_Board/bsp_board.c",
+          "text": ".use_mclk = false,"
+        }
+      ]
+    },
+    {
+      "setting": "es8311_pa_pin",
+      "value": -1,
+      "gate": "HW-AUD-OUT-01",
+      "sources": [
+        {
+          "path": "components/auido_borad/boards/ESP32_S3_AUDIO_Board/bsp_board.c",
+          "text": ".pa_pin = GPIO_PWR_CTRL,"
+        },
+        {
+          "path": "components/auido_borad/boards/include/ESP32_S3_AUDIO_Board.h",
+          "text": "#define GPIO_PWR_CTRL       (-1)"
+        }
+      ],
+      "note": "The ES8311 driver is deliberately never given the amplifier pin."
+    },
+    {
+      "setting": "ns4150b_enable_level",
+      "value": 1,
+      "gate": "HW-AUD-OUT-01",
+      "sources": [
+        {
+          "path": "main/Audio_Driver/Audio_Driver.c",
+          "text": "void Audio_PA_EN(){\n\n    gpio_set_level(GPIO_NUM_15,1);\n}"
+        },
+        {
+          "path": "main/Audio_Driver/Audio_Driver.c",
+          "text": "gpio_set_level(GPIO_NUM_15,0);"
+        }
+      ],
+      "note": "Upstream pipeline_init() resets GPIO15, sets it to output, and drives it low before use."
+    }
+  ],
+  "deliberate_deviations": [
+    {
+      "setting": "es8311 output volume",
+      "upstream": "PLAYER_VOLUME 50",
+      "here": "CONFIG_ZV_M1_PLAYBACK_VOLUME default 20",
+      "reason": "M1 is a bounded diagnostic; the tone must be audible without being loud."
+    },
+    {
+      "setting": "diagnostic tone amplitude",
+      "upstream": "not applicable (upstream plays MP3 assets)",
+      "here": "CONFIG_ZV_M1_TONE_AMPLITUDE_PERMILLE default 60, clamped in code to 200",
+      "reason": "Bounds the digital level independently of codec volume."
+    }
+  ]
+}

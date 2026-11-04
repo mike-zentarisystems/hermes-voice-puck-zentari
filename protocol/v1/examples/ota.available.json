@@ -1,0 +1,13 @@
+{
+  "v": 1,
+  "type": "ota.available",
+  "version": "0.2.0",
+  "board_id": "waveshare-esp32-s3-touch-lcd-1.85c-box-rev2",
+  "channel": "stable",
+  "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "signature_scheme": "esp-secure-boot-v2-rsa3072",
+  "secure_version": 2,
+  "image_size": 3145728,
+  "url": "https://ota.invalid/stable/zentari-voice-puck-0.2.0.bin",
+  "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+}

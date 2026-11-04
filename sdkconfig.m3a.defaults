@@ -1,0 +1,2 @@
+# M3a opt-in mode. Combine with the existing local M2 WSS overlay at build time.
+CONFIG_ZV_M3A_VOICE_MODE=y

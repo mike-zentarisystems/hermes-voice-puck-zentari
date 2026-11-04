@@ -1,0 +1,5 @@
+# Lab overlay: set SSID/password/origin locally; do not commit secrets.
+# CONFIG_ZV_M2_WSS_MODE=y
+# CONFIG_ZV_M2_WIFI_SSID="your-lab-ssid"
+# CONFIG_ZV_M2_WIFI_PASSWORD="your-lab-pass"
+# CONFIG_ZV_M2_GATEWAY_ORIGIN="wss://192.0.2.10:8443/"

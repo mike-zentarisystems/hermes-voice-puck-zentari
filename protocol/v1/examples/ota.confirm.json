@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "type": "ota.confirm",
+  "version": "0.2.0",
+  "result": "accepted",
+  "device_id": "puck-lab-0001",
+  "detail": "self_test_passed"
+}

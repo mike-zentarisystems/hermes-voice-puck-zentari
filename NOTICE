@@ -1,0 +1,49 @@
+Zentari Voice Puck
+Copyright 2026 Zentari Systems
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+------------------------------------------------------------------------------
+Waveshare ESP32-S3-Touch-LCD-1.85C reference material
+------------------------------------------------------------------------------
+This product contains values and a display initialization sequence derived
+from the Waveshare ESP32-S3-Touch-LCD-1.85C repository:
+
+  Repository: https://github.com/waveshareteam/ESP32-S3-Touch-LCD-1.85C
+  Revision:   8ead4a96bf3a278fc4ebd8ef4768657e17fa2880 (2026-07-30)
+  License:    Apache License, Version 2.0
+  Copy:       third_party/waveshare/LICENSE (byte-identical to upstream)
+
+Derived files:
+  components/zv_display/src/zv_st77916_init_cmds.c
+    - ST77916 vendor initialization command table taken from
+      ESP-IDF/ESP32-S3-Touch-LCD-1.85C-Test/main/LCD_Driver/ST77916.c
+  components/zv_board/include/zv_board_pins.h and hardware/pinmap.json
+    - GPIO numbers, I2C addresses, and timing values; each value cites its
+      upstream file in hardware/pinmap.json
+
+Details, artifact hashes, and the list of what was and was not copied are in
+third_party/waveshare/UPSTREAM.md.
+
+------------------------------------------------------------------------------
+Build-time dependencies (fetched by the ESP-IDF Component Manager, not
+vendored in this repository)
+------------------------------------------------------------------------------
+ESP-IDF (Espressif Systems), LVGL, espressif/esp_lcd_st77916,
+espressif/esp_lcd_touch_cst816s, espressif/esp_codec_dev, espressif/esp-sr,
+espressif/esp_websocket_client. Each is governed by the license shipped with
+that component; review those licenses (including any model-usage terms in
+esp-sr) before distributing firmware binaries. Release checklist item
+LEGAL-01 in docs/ROADMAP.md tracks this review.
+
+Vendored third-party source
+---------------------------
+components/zv_lcd_st77916/ contains the Espressif ST77916 LCD panel driver,
+copied verbatim from the pinned Waveshare revision
+8ead4a96bf3a278fc4ebd8ef4768657e17fa2880 at
+ESP-IDF/ESP32-S3-Touch-LCD-1.85C-Test/main/LCD_Driver/esp_lcd_st77916/.
+
+  SPDX-FileCopyrightText: 2023 Espressif Systems (Shanghai) CO LTD
+  SPDX-License-Identifier: Apache-2.0
+
+The original SPDX headers are preserved unmodified in both files.

@@ -1,0 +1,16 @@
+.runtime/
+.env*
+!.env.example
+models/
+build/
+out/
+dist/
+__pycache__/
+*.pyc
+node_modules/
+sdkconfig
+sdkconfig.old
+managed_components/
+secrets/
+*.key
+*.pem

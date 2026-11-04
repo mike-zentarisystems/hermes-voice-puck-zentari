@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Meet Zenti: a local-first voice companion. Explore a private, offline browser demo.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta name="referrer" content="no-referrer"><title>Zenti · A little presence. Your own intelligence.</title>
+  <link rel="stylesheet" href="demo.css"><link rel="icon" href="avatars/zenti-idle.png">
+</head>
+<body>
+  <a class="skip" href="#demo">Skip to demo</a>
+  <header><a class="wordmark" href="./" aria-label="Zenti home">zenti<span>by Zentari</span></a><a href="#setup">Make it yours <span aria-hidden="true">↗</span></a></header>
+  <main>
+    <section class="intro" aria-labelledby="title"><p class="eyebrow">SMALL COMPANION. LOCAL INTELLIGENCE.</p>
+      <h1 id="title">A little presence.<br><em>Your own intelligence.</em></h1>
+      <p class="lede">A voice companion for your desk, and a quiet place to think in your browser. Run the intelligence on your own machine.</p>
+      <div class="notes"><span>Local models first</span><span>Clear controls</span><span>Open source candidate</span></div>
+    </section>
+    <section class="workbench" id="demo" aria-labelledby="demo-title">
+      <div class="companion"><div class="orbit"><img id="portrait" src="avatars/zenti-idle.png" width="224" height="224" alt="Zenti geometric companion"></div>
+        <h2 id="demo-title">Meet Zenti</h2><p id="state" role="status">Ready when you are</p>
+        <button id="avatar" type="button">Switch companion</button>
+      </div>
+      <div class="chat"><div class="chat-top"><span class="live">INTERACTIVE PREVIEW</span><button id="reset" type="button">Start over</button></div>
+        <p class="privacy">Scripted replies · No microphone · No network requests · Nothing saved</p>
+        <ol id="messages" aria-label="Demo conversation" aria-live="polite"><li class="assistant">Hello. I’m Zenti. Try a question below to explore the controls.</li></ol>
+        <div class="prompts" aria-label="Example questions"><button data-prompt="What stays private?">What stays private?</button><button data-prompt="How do I run you locally?">Run locally</button><button data-prompt="What can the puck do?">Meet the puck</button></div>
+        <form id="composer"><label for="message">Try a message</label><div class="compose-row"><input id="message" maxlength="3000" autocomplete="off" placeholder="Ask about Zenti…"><button id="send" type="submit">Send <span aria-hidden="true">↑</span></button><button id="stop" type="button" hidden>Stop</button></div></form>
+      </div>
+    </section>
+    <section class="setup" id="setup" aria-labelledby="setup-title"><div><p class="eyebrow">FROM PREVIEW TO YOUR OWN DESK</p><h2 id="setup-title">Keep the conversation close.</h2><p>This preview is a small, scripted tour. The full client connects to your own authenticated HTTPS gateway for text and voice.</p></div>
+      <ol><li><strong>Try it here.</strong> No account, hardware, microphone or model required.</li><li><strong>Run your gateway.</strong> Use the included Compose setup, a local OpenAI-compatible model, and licensed speech models.</li><li><strong>Add a puck.</strong> Reference ESP32-S3 firmware is included as experimental hardware source. Battery, update recovery and soak gates remain open.</li></ol>
+    </section>
+    <aside class="status"><strong>Preview, with honest boundaries.</strong> The source candidate is being prepared for public review. This demo does not prove live model performance, physical hardware reliability, or stable release readiness.</aside>
+  </main>
+  <footer><span>ZENTI / BY ZENTARI</span><span>No analytics. No external assets. Your next step: the repository README.</span></footer>
+  <script src="demo.js"></script>
+</body></html>

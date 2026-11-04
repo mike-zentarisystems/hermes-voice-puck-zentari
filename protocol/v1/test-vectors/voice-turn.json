@@ -1,0 +1,13 @@
+{
+  "valid": [
+    {"v":1,"type":"audio.input.start","device_id":"puck-lab-0001","session_id":"00000000-0000-4000-8000-000000000001","correlation_id":"00000000-0000-4000-8000-000000000002","seq":1,"format":{"encoding":"pcm_s16le","sample_rate":16000,"channels":1}},
+    {"v":1,"type":"audio.input.chunk","device_id":"puck-lab-0001","session_id":"00000000-0000-4000-8000-000000000001","correlation_id":"00000000-0000-4000-8000-000000000002","seq":2,"data":"AAAAAA=="},
+    {"v":1,"type":"audio.input.stop","device_id":"puck-lab-0001","session_id":"00000000-0000-4000-8000-000000000001","correlation_id":"00000000-0000-4000-8000-000000000002","seq":3}
+  ],
+  "invalid": [
+    {"reason":"wrong session","v":1,"type":"audio.input.start","device_id":"puck-lab-0001","session_id":"00000000-0000-4000-8000-000000000099","correlation_id":"00000000-0000-4000-8000-000000000002","seq":1,"format":{"encoding":"pcm_s16le","sample_rate":16000,"channels":1}},
+    {"reason":"empty chunk","v":1,"type":"audio.input.chunk","device_id":"puck-lab-0001","session_id":"00000000-0000-4000-8000-000000000001","correlation_id":"00000000-0000-4000-8000-000000000002","seq":2,"data":""},
+    {"reason":"wrong sample rate","v":1,"type":"audio.input.start","device_id":"puck-lab-0001","session_id":"00000000-0000-4000-8000-000000000001","correlation_id":"00000000-0000-4000-8000-000000000002","seq":1,"format":{"encoding":"pcm_s16le","sample_rate":48000,"channels":1}},
+    {"reason":"repeated sequence","v":1,"type":"audio.input.stop","device_id":"puck-lab-0001","session_id":"00000000-0000-4000-8000-000000000001","correlation_id":"00000000-0000-4000-8000-000000000002","seq":2}
+  ]
+}

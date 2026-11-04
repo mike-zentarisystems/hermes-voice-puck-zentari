@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#101522">
+  <title>Zentari Voice · Conversation</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <a class="skip-link" href="#message">Skip to message</a>
+  <header>
+    <a class="brand" href="./" aria-label="Zentari Voice home">ZENTARI <span>Voice</span></a>
+    <div class="connection-info"><span id="connection" role="status">Disconnected</span><time id="clock"></time></div>
+    <button id="settings-open">Settings</button>
+  </header>
+  <main>
+    <section class="character" aria-label="Assistant">
+      <div id="avatar" data-state="idle"><img id="portrait" src="avatars/zenti-idle.png" alt="Zenti" width="448" height="448"></div>
+      <div class="character-info">
+        <p class="eyebrow">YOUR ASSISTANT</p><h1 id="avatar-name">Zenti</h1>
+        <p id="activity" role="status">Ready when you are</p>
+        <div id="voice-meter" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      </div>
+      <p id="notice" role="alert"></p>
+    </section>
+    <section class="conversation" aria-labelledby="conversation-heading">
+      <div class="conversation-title"><h2 id="conversation-heading">Conversation</h2><div class="conversation-actions"><button id="export" disabled>Export .md</button><button id="new-conversation" disabled>New conversation</button></div></div>
+      <p id="empty">Sign in in Settings to start a private conversation.</p>
+      <ol id="transcript" aria-label="Conversation" aria-live="polite" tabindex="0" hidden></ol>
+      <button id="new-replies" hidden>New replies ↓</button>
+      <form id="text-form"><label for="message">Message</label><div class="composer"><textarea id="message" rows="2" maxlength="3000" placeholder="Type a message…"></textarea><button id="send" disabled>Send</button></div></form>
+    </section>
+  </main>
+  <footer aria-label="Voice controls">
+    <div class="voice-actions">
+      <button id="talk" aria-describedby="voice-hint" disabled>Hold to talk</button>
+      <button id="mic" aria-pressed="false">Mute microphone</button>
+      <button id="hands-free" aria-pressed="false" disabled>Start hands-free</button>
+      <button id="stop" disabled hidden>Cancel response</button>
+    </div>
+    <div class="voice-options">
+      <div class="speaker-control"><label for="volume">Volume</label><input id="volume" type="range" min="0" max="100" value="40"><output id="volume-value" for="volume">40%</output></div>
+      <button id="reconnect" disabled>Reconnect</button>
+    </div>
+    <p id="voice-hint">Sign in to talk or send a message.</p>
+  </footer>
+  <dialog id="settings" aria-labelledby="settings-heading"><form method="dialog">
+    <h2 id="settings-heading">Settings</h2>
+    <div id="login"><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="current-password" maxlength="256" aria-describedby="sign-in-status"><button type="button" id="sign-in">Sign in</button><p id="sign-in-status" role="alert"></p><p>Sign in to use the private voice gateway.</p></div>
+    <label>Avatar <select id="avatar-select"><option value="zenti">Zenti</option><option value="orbit">Orbit</option></select></label>
+    <label>Microphone <select id="input-device"><option value="">System default</option></select></label>
+    <label class="toggle"><input id="voice-replies" type="checkbox" checked> Voice replies</label>
+    <label class="toggle"><input id="reduce-motion" type="checkbox"> Reduce motion</label>
+    <div class="dialog-actions"><button type="button" id="logout">Log out</button><button>Done</button></div>
+  </form></dialog>
+  <dialog id="approval" aria-labelledby="approval-heading"><h2 id="approval-heading">Waiting for approval</h2><p id="approval-text"></p><button id="deny">Deny</button><button id="approve">Hold to approve</button></dialog>
+  <script src="gateway.js"></script><script src="audio.js"></script><script src="avatar.js"></script><script src="message.js"></script><script src="app.js"></script>
+</body>
+</html>

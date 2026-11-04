@@ -1,0 +1,33 @@
+name: Compile experimental reference firmware
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  firmware:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - mode: default
+            defaults: sdkconfig.defaults
+          - mode: m3a
+            defaults: sdkconfig.defaults;sdkconfig.m3a.defaults
+          - mode: approval
+            defaults: sdkconfig.defaults;sdkconfig.m3.defaults
+          - mode: ota
+            defaults: sdkconfig.defaults;build/ci-m4.defaults;sdkconfig.m4.defaults
+          - mode: shell
+            defaults: sdkconfig.defaults;sdkconfig.shell.defaults
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Compile only; no device access or binary publication
+        env:
+          ZENTI_DEFAULTS: ${{ matrix.defaults }}
+        run: |
+          mkdir -p build
+          printf 'CONFIG_ZV_M2_WSS_MODE=y\n' > build/ci-m4.defaults
+          docker run --rm -v "$PWD:/project" -w /project -e ZENTI_DEFAULTS \
+            espressif/idf:v6.1@sha256:81893c71bb5e570088901f21def8684c25cd2a9020281bd01b843a7655edb18c \
+            bash -c 'idf.py -B build/firmware -D SDKCONFIG=build/firmware/sdkconfig -D SDKCONFIG_DEFAULTS="$ZENTI_DEFAULTS" set-target esp32s3 build'

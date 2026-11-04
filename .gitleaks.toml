@@ -1,0 +1,8 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Exact published synthetic approval JWT; no enrolled credential or fixture directory is allowed"
+condition = "AND"
+paths = ['(^|/)protocol/v1/test-vectors/approval-signature\.json$']
+regexes = ['''eyJhbGciOiJFUzI1NiIsImtpZCI6Imd3LWdyYW50LXRlc3QtMjAyNi0wOSIsInR5cCI6Inp2LWFwcHJvdmFsLWdyYW50K2p3dCJ9\.eyJhY3Rpb24iOiJmaWxlcy5kZWxldGUiLCJhY3Rpb25fZGlnZXN0IjoiYTBlZGRmNWY4Njc2MGE0OGIxNWIxNzNhN2U0NDRjOWZlM2Q3OWM5MmYzZjA2MWJiYmY5YzU3NDk3ZDlhZDA0MSIsImFwcHJvdmFsX2lkIjoiM2Y2YzJhMWUtOGI0ZC00YzdhLTllMjEtNWQwZjdiM2E5YzE0IiwiYXVkIjoiaGVybWVzIiwiZGVjaXNpb24iOiJhcHByb3ZlIiwiZXhwIjoxNzg5MTI4MDM3LCJpYXQiOjE3ODkxMjgwMDcsImlzcyI6InplbnRhcmktZ2F0ZXdheSIsImp0aSI6ImI3YTJjOWU0LTFmM2QtNGE2Yi04YzVlLTJkOWYwYTdiM2M2MSIsIm5iZiI6MTc4OTEyODAwNywic2luZ2xlX3VzZSI6dHJ1ZSwic3ViIjoienZwLTdjOWViZDNhNDFmMCJ9\.Bqf\-jWsEcNtLAXq8UgfzXPocf500U_yDCHY1SCBMpWUlY0F40oN1faDR_fSLl6TAFPesIlfQ1aiqn0uS\-eZXxg''']

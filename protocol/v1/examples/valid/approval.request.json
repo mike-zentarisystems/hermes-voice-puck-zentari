@@ -1,0 +1,20 @@
+{
+  "v": 1,
+  "type": "approval.request",
+  "id": "6b1f0e2a-7c3d-4b8e-9f10-2a3b4c5d6e7f",
+  "ts": "2026-09-11T12:00:00.000Z",
+  "session_id": "0d4e8f6a-2b7c-4e19-a3d5-9c1b7e6f2a80",
+  "payload": {
+    "approval_id": "3f6c2a1e-8b4d-4c7a-9e21-5d0f7b3a9c14",
+    "action": "files.delete",
+    "risk": "destructive",
+    "summary": "Delete 14 files in /projects/archive/2025 on DevBox",
+    "action_digest": "a0eddf5f86760a48b15b173a7e444c9fe3d79c92f3f061bbbf9c57497d9ad041",
+    "nonce": "q3JtV8x0bF2nYw7pLk4sZg",
+    "issued_at": 1789128000,
+    "expires_at": 1789128045,
+    "kid": "gw-approval-test-2026-09",
+    "alg": "ES256",
+    "signature": "sX_qw6aUiDDuoBWat4DmJGjpuZ7zVqYZSk2fWMQ29fqTwBFbNRi2K3o5HTZaimrPUPXRzb15JFn_int5cpP4lQ"
+  }
+}

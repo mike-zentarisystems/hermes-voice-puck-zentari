@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "M3a post-auth voice event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["v", "type", "device_id", "session_id", "correlation_id", "seq"],
+  "properties": {
+    "v": {"const": 1},
+    "type": {"enum": ["audio.input.start", "audio.input.chunk", "audio.input.stop", "transcript.final", "assistant.thinking", "assistant.text", "audio.output.start", "audio.output.chunk", "audio.output.stop", "cancel", "error"]},
+    "device_id": {"type": "string", "pattern": "^[a-z0-9-]{8,64}$"},
+    "session_id": {"type": "string", "format": "uuid"},
+    "correlation_id": {"type": "string", "format": "uuid"},
+    "seq": {"type": "integer", "minimum": 1},
+    "format": {
+      "type": "object", "additionalProperties": false,
+      "required": ["encoding", "sample_rate", "channels"],
+      "properties": {"encoding": {"const": "pcm_s16le"}, "sample_rate": {"const": 16000}, "channels": {"const": 1}}
+    },
+    "data": {"type": "string", "minLength": 4, "maxLength": 1368, "pattern": "^[A-Za-z0-9+/]*={0,2}$"},
+    "text": {"type": "string", "minLength": 1, "maxLength": 4096},
+    "code": {"type": "string", "minLength": 1, "maxLength": 48, "pattern": "^[a-z0-9_]+$"}
+  },
+  "allOf": [
+    {"if": {"properties": {"type": {"enum": ["audio.input.start", "audio.output.start"]}}}, "then": {"required": ["format"]}},
+    {"if": {"properties": {"type": {"enum": ["audio.input.chunk", "audio.output.chunk"]}}}, "then": {"required": ["data"]}},
+    {"if": {"properties": {"type": {"enum": ["transcript.final", "assistant.text"]}}}, "then": {"required": ["text"]}},
+    {"if": {"properties": {"type": {"const": "error"}}}, "then": {"required": ["code"]}}
+  ]
+}

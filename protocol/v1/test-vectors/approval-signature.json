@@ -1,0 +1,52 @@
+{
+  "description": "TEST ONLY signed-approval vector. Private keys were discarded at generation time.",
+  "generator": "scripts/gen_approval_test_vector.py",
+  "request_signature": {
+    "algorithm": "ES256: ECDSA P-256 over SHA-256(canonical_input); signature = base64url(r || s)",
+    "kid": "gw-approval-test-2026-09",
+    "public_key_sec1_b64url": "BK7YmwKvtKfPyiBJ83IsmtjXiuwCIlIoYnsjrKhguWA48hQagFYe8kEN0AcE0S3z3IJ0-X-1e9yEX35ttQ-q6k8",
+    "canonical_action": {
+      "action": "files.delete",
+      "params": {
+        "count": 14,
+        "host": "devbox",
+        "paths_glob": "/projects/archive/2025/*"
+      },
+      "requested_by": "hermes"
+    },
+    "canonical_action_json": "{\"action\":\"files.delete\",\"params\":{\"count\":14,\"host\":\"devbox\",\"paths_glob\":\"/projects/archive/2025/*\"},\"requested_by\":\"hermes\"}",
+    "request": {
+      "approval_id": "3f6c2a1e-8b4d-4c7a-9e21-5d0f7b3a9c14",
+      "action": "files.delete",
+      "risk": "destructive",
+      "summary": "Delete 14 files in /projects/archive/2025 on DevBox",
+      "action_digest": "a0eddf5f86760a48b15b173a7e444c9fe3d79c92f3f061bbbf9c57497d9ad041",
+      "nonce": "q3JtV8x0bF2nYw7pLk4sZg",
+      "issued_at": 1789128000,
+      "expires_at": 1789128045,
+      "kid": "gw-approval-test-2026-09"
+    },
+    "canonical_input": "zv-approval-v1\n3f6c2a1e-8b4d-4c7a-9e21-5d0f7b3a9c14\nfiles.delete\ndestructive\na0eddf5f86760a48b15b173a7e444c9fe3d79c92f3f061bbbf9c57497d9ad041\nq3JtV8x0bF2nYw7pLk4sZg\n1789128000\n1789128045\ngw-approval-test-2026-09\nDelete 14 files in /projects/archive/2025 on DevBox",
+    "signature_b64url": "sX_qw6aUiDDuoBWat4DmJGjpuZ7zVqYZSk2fWMQ29fqTwBFbNRi2K3o5HTZaimrPUPXRzb15JFn_int5cpP4lQ"
+  },
+  "grant_signature": {
+    "algorithm": "JWS compact serialization, ES256, header.typ = zv-approval-grant+jwt",
+    "kid": "gw-grant-test-2026-09",
+    "public_key_sec1_b64url": "BFYih3ZAcQxi2MM_LXCiocucnb5bCSvGK9fr77D6RWpGwFh4LLW-Sb_160h2ITFN1FYnml9tJqTcKfkHH-vfBgw",
+    "claims": {
+      "iss": "zentari-gateway",
+      "aud": "hermes",
+      "sub": "zvp-7c9ebd3a41f0",
+      "jti": "b7a2c9e4-1f3d-4a6b-8c5e-2d9f0a7b3c61",
+      "iat": 1789128007,
+      "nbf": 1789128007,
+      "exp": 1789128037,
+      "approval_id": "3f6c2a1e-8b4d-4c7a-9e21-5d0f7b3a9c14",
+      "action": "files.delete",
+      "action_digest": "a0eddf5f86760a48b15b173a7e444c9fe3d79c92f3f061bbbf9c57497d9ad041",
+      "decision": "approve",
+      "single_use": true
+    },
+    "jws": "eyJhbGciOiJFUzI1NiIsImtpZCI6Imd3LWdyYW50LXRlc3QtMjAyNi0wOSIsInR5cCI6Inp2LWFwcHJvdmFsLWdyYW50K2p3dCJ9.eyJhY3Rpb24iOiJmaWxlcy5kZWxldGUiLCJhY3Rpb25fZGlnZXN0IjoiYTBlZGRmNWY4Njc2MGE0OGIxNWIxNzNhN2U0NDRjOWZlM2Q3OWM5MmYzZjA2MWJiYmY5YzU3NDk3ZDlhZDA0MSIsImFwcHJvdmFsX2lkIjoiM2Y2YzJhMWUtOGI0ZC00YzdhLTllMjEtNWQwZjdiM2E5YzE0IiwiYXVkIjoiaGVybWVzIiwiZGVjaXNpb24iOiJhcHByb3ZlIiwiZXhwIjoxNzg5MTI4MDM3LCJpYXQiOjE3ODkxMjgwMDcsImlzcyI6InplbnRhcmktZ2F0ZXdheSIsImp0aSI6ImI3YTJjOWU0LTFmM2QtNGE2Yi04YzVlLTJkOWYwYTdiM2M2MSIsIm5iZiI6MTc4OTEyODAwNywic2luZ2xlX3VzZSI6dHJ1ZSwic3ViIjoienZwLTdjOWViZDNhNDFmMCJ9.Bqf-jWsEcNtLAXq8UgfzXPocf500U_yDCHY1SCBMpWUlY0F40oN1faDR_fSLl6TAFPesIlfQ1aiqn0uS-eZXxg"
+  }
+}

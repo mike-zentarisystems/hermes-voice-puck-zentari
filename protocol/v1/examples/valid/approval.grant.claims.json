@@ -1,0 +1,14 @@
+{
+  "iss": "zentari-gateway",
+  "aud": "hermes",
+  "sub": "zvp-7c9ebd3a41f0",
+  "jti": "b7a2c9e4-1f3d-4a6b-8c5e-2d9f0a7b3c61",
+  "iat": 1789128007,
+  "nbf": 1789128007,
+  "exp": 1789128037,
+  "approval_id": "3f6c2a1e-8b4d-4c7a-9e21-5d0f7b3a9c14",
+  "action": "files.delete",
+  "action_digest": "a0eddf5f86760a48b15b173a7e444c9fe3d79c92f3f061bbbf9c57497d9ad041",
+  "decision": "approve",
+  "single_use": true
+}

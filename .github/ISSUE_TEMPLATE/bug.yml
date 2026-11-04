@@ -1,0 +1,23 @@
+name: Bug report
+description: Report a reproducible non-sensitive defect
+body:
+  - type: markdown
+    attributes:
+      value: "Do not include credentials, raw audio, private transcripts, hostnames, environment files or security vulnerabilities. Follow SECURITY.md for confidential reports."
+  - type: input
+    id: version
+    attributes:
+      label: Source revision and environment
+      description: Include OS, browser and board revision if relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction, expected behavior and actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Sanitized evidence and tests run

@@ -1,0 +1,32 @@
+name: zenti-local
+services:
+  voice:
+    platform: linux/amd64
+    build: .
+    user: "${ZENTI_UID:-10001}:${ZENTI_GID:-10001}"
+    ports:
+      - "127.0.0.1:8443:8443"
+      - "127.0.0.1:8444:8444"
+    volumes:
+      - ./.runtime:/run/zenti:ro
+      - ./models:/models:ro
+    environment:
+      VOICE_STT_MODEL: /models/stt
+      VOICE_TTS_MODEL: /models/voice.onnx
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 128
+    mem_limit: 4g
+    cpus: 4
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m,mode=1777
+    healthcheck:
+      test: [CMD, python, -c, "import ssl,urllib.request; urllib.request.urlopen('https://localhost:8443/healthz',context=ssl.create_default_context(cafile='/run/zenti/ca.pem'),timeout=3).read()"]
+      interval: 30s
+      timeout: 5s
+      start_period: 60s
+      retries: 3
+    restart: unless-stopped

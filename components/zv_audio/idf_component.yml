@@ -1,0 +1,9 @@
+## ESP-IDF component manager manifest.
+##
+## esp_codec_dev is the single new dependency. It is the exact component the
+## pinned Waveshare revision 8ead4a96bf3a278fc4ebd8ef4768657e17fa2880 uses in
+## components/auido_borad/idf_component.yml, so the ES7210 and ES8311 register
+## sequences are the vendor-supported ones rather than invented here. The
+## resolved version is pinned in the committed dependencies.lock.
+dependencies:
+  espressif/esp_codec_dev: "^1.3.0"
