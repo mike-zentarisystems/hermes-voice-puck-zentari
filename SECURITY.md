@@ -1,18 +1,25 @@
 # Security
 
-This is a preview candidate. It has not received an independent security audit
-and has no stable supported release. Authentication, updates and physical safety
+This is an experimental preview. Automated tests and a static AI source review
+have run; there has been no independent human security audit or stable supported
+release. Authentication, updates and physical safety
 must not be described as certified or production-ready.
 
 ## Report privately
 
-Do not put vulnerabilities, exploits, credentials or private user data into public
-issues. Use this repository's **Security → Report a vulnerability** only after
-maintainers enable private vulnerability reporting. The release checklist requires
-an end-to-end test of that channel and its notifications before public launch.
-That test is still pending; no monitored inbox or response-time SLA is claimed.
-If the private-report action is unavailable, keep sensitive details private until
-the repository owner provides a working private channel.
+Email [info@zentarisystems.io](mailto:info@zentarisystems.io) for private security
+reports. This is the repository owner's designated monitored contact.
+When available, use [GitHub's private vulnerability report form](https://github.com/mike-zentarisystems/hermes-voice-puck-zentari/security/advisories/new).
+The form is private to the reporter and repository security maintainers; a
+public issue is not a private reporting channel.
+
+Include the source revision, affected component, impact and safe reproduction
+steps. Omit live credentials, raw audio, personal transcripts and private device
+dumps. Use the subject **Hermes Voice Puck security report** for email.
+
+If the GitHub form is unavailable, use the email contact. No guaranteed response
+time is promised. Channel configuration and notification delivery are separate
+checks; the [maintainer procedure](docs/MAINTAINER.md) records how to verify them.
 
 Maintainers acknowledge privately when available, reproduce in an isolated fixture,
 coordinate a patch and advisory, and disclose after a remediation path exists.

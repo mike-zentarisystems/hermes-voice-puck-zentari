@@ -3,6 +3,15 @@ Copyright 2026 Zentari Systems
 
 This product is licensed under the Apache License, Version 2.0 (see LICENSE).
 
+The Zentari-owned extracted voice gateway source is included under that license
+by the repository owner's direction of November 4, 2026. Third-party components,
+models and voices retain their own licenses; no model weights are distributed.
+
+Preview modifications include standalone gateway/browser packaging, procedural
+public artwork, speech-worker and TLS repairs, OTA acceptance dispatch and
+display DMA lifetime handling. Changes are identified in CHANGELOG.md and Git
+history; original vendor and source attribution notices remain preserved.
+
 ------------------------------------------------------------------------------
 Waveshare ESP32-S3-Touch-LCD-1.85C reference material
 ------------------------------------------------------------------------------

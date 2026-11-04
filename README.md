@@ -3,7 +3,7 @@
 A local-first voice companion for your browser and a round ESP32-S3 puck.
 Talk, type, cancel a reply, reset a conversation, and choose a companion.
 
-**Public preview candidate.** The browser demo is scripted. Hardware source is
+**Experimental source preview.** The browser demo is scripted. Hardware source is
 experimental. A stable 1.0 release is not accepted; see [release status](docs/RELEASE-STATUS.md).
 
 ## Try the web demo — no account or hardware
@@ -118,5 +118,7 @@ Do not flash the accepted private installation with this preview.
 The source export has no private repository history, production configuration,
 customer records or model weights. Procedural public artwork is generated from
 source; the original reference portraits are omitted. Existing Apache-2.0 and
-vendor notices are retained. Public redistribution of the extracted gateway
-still requires the ownership/license decision recorded in release status.
+vendor notices are retained. The owner selected Apache-2.0 for the Zentari-owned
+source, including the extracted gateway; third-party licenses remain separate.
+Private security and conduct contact: [info@zentarisystems.io](mailto:info@zentarisystems.io).
+See [the license inventory](docs/LICENSES.md) and [maintainer procedure](docs/MAINTAINER.md).

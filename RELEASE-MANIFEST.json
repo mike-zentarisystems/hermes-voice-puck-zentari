@@ -23,9 +23,19 @@
       "sha256": "2d3d361a4ba3f513b0c96badc020b936a7b54f0604d9f99d24376756c3007023"
     },
     {
+      "path": ".github/ISSUE_TEMPLATE/config.yml",
+      "bytes": 558,
+      "sha256": "3f8425f5306dd2dd4a8b5c2a44de51fb38f73d4c99f6a92936a9fe6a763608a8"
+    },
+    {
       "path": ".github/pull_request_template.md",
       "bytes": 348,
       "sha256": "aa8ada618b79afad540c8a01f2c02cf9455b23717233fe1099d272fa4fa73036"
+    },
+    {
+      "path": ".github/VULNERABILITY_REPORT.yml",
+      "bytes": 1012,
+      "sha256": "ea8a812fe18b45f8117be9c1acef873576d4c657a80dd1b128e93413f794f372"
     },
     {
       "path": ".github/workflows/firmware.yml",
@@ -59,8 +69,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 2150,
-      "sha256": "d5c2427c99a8c564c06aa0b85c621e671a7b702299d80583afd58b1ce6e00108"
+      "bytes": 2733,
+      "sha256": "781a8ac487a629889e9c84276571e2c868e90587cd50e8f49b31388b49dea98b"
     },
     {
       "path": "CMakeLists.txt",
@@ -69,8 +79,8 @@
     },
     {
       "path": "CODE_OF_CONDUCT.md",
-      "bytes": 807,
-      "sha256": "568015b2a5dd4fe9f38b9957ac4356237d5a349ad42cba1e256a10ab1357d6f1"
+      "bytes": 960,
+      "sha256": "5e5bc11c7bec6a1a69d52b5cd53a8192c5ac40987011d204575720d1bd7785ef"
     },
     {
       "path": "components/zv_audio/CMakeLists.txt",
@@ -559,13 +569,18 @@
     },
     {
       "path": "docs/LICENSES.md",
-      "bytes": 2080,
-      "sha256": "2014f907a77e142f89ae759b3cb6dd20521bf26826c8d52bf9a9d37b841fc5a8"
+      "bytes": 2868,
+      "sha256": "309cbdb5355bc71c441f62e9aee55ad37d70d9d6375dcf3ebcf127354ce268b7"
+    },
+    {
+      "path": "docs/MAINTAINER.md",
+      "bytes": 3592,
+      "sha256": "d00e374504dea4de1321fbd96e0bc809745c982d41474649382f5c75ceb57e46"
     },
     {
       "path": "docs/RELEASE-STATUS.md",
-      "bytes": 8051,
-      "sha256": "9ba2117e0567a3aa996f3d6e84fe5b34c06b0656eed1bb44ac3bec8585c8df53"
+      "bytes": 9732,
+      "sha256": "fcb58b17b45f2b1b99746f779eb157ab7a34fd307ba118b2d43ad175fabaf976"
     },
     {
       "path": "docs/RELEASE.md",
@@ -609,8 +624,8 @@
     },
     {
       "path": "NOTICE",
-      "bytes": 2369,
-      "sha256": "2126328abf33eddb819331f40b5ea61b0effab34ead0bf40e80431d74f2bc6bb"
+      "bytes": 2917,
+      "sha256": "b969d039118f37ddc1cf36444a4d3320e64cdb5d233b3650e8cab004b7444e49"
     },
     {
       "path": "partitions.csv",
@@ -924,8 +939,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 6417,
-      "sha256": "bacb7eacc8f351798efd773803200bb6a4b60b51ee738b2dae1d74ac8a5d0f4c"
+      "bytes": 6619,
+      "sha256": "b4ac2bdaab460cf74d942ce49d6c0c29596a329bef12ced5d34ba848bc8df819"
     },
     {
       "path": "requirements.lock",
@@ -1039,8 +1054,8 @@
     },
     {
       "path": "SECURITY.md",
-      "bytes": 1740,
-      "sha256": "5dd8edb96ccce54d30783f88dd6d88a806da09aaf853bcd92dbb2d84a6cec52e"
+      "bytes": 2157,
+      "sha256": "115207028cd0377f45923c3382a3ccaac4edf84b4aa0b0e69fb35125c1a31c3e"
     },
     {
       "path": "server.py",
@@ -1114,13 +1129,13 @@
     },
     {
       "path": "site/index.html",
-      "bytes": 4049,
-      "sha256": "94966185659bcab145fe48523a598e7b2fac4b8c120478a77ac6aa9aed268005"
+      "bytes": 4132,
+      "sha256": "a5cb4d69896eac006937e287002b0d9c79b722e016102bba49c14c80861d7a0f"
     },
     {
       "path": "SUPPORT.md",
-      "bytes": 902,
-      "sha256": "2ff2a63ea2a323b6e720f9a5b402de66e21e1e6c98b7901db14189d4cdabdd8c"
+      "bytes": 1257,
+      "sha256": "56cd60e2c73d5f08e7fef80b4a3522b72452c2d8ea7f73c7c3972113c6b4f96b"
     },
     {
       "path": "tests/host/CMakeLists.txt",

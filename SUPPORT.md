@@ -3,6 +3,11 @@
 This candidate is for local evaluation. There is no on-call service, guaranteed
 response time, paid support contract or stable compatibility promise.
 
+Private security and conduct contact: [info@zentarisystems.io](mailto:info@zentarisystems.io).
+Security reports can also use [GitHub private reporting](https://github.com/mike-zentarisystems/hermes-voice-puck-zentari/security/advisories/new)
+when enabled. Follow [SECURITY.md](SECURITY.md) for sensitive details; no guaranteed
+response time is promised.
+
 For non-sensitive bugs, use a repository issue with the source revision,
 OS/browser, clean reproduction and sanitized error category. Follow SECURITY.md
 for vulnerabilities. Model providers, operating systems and reference hardware

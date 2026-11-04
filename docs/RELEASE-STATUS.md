@@ -1,9 +1,32 @@
-# Public readiness — 2026-10-26
+# Public preview status — 2026-11-04
 
-**Source/web preview candidate prepared. Stable product release remains open.**
+**Experimental source/web preview prepared. Stable product release remains open.**
 The acceptance below applies to this new export, not an older installed puck.
 Private source history, infrastructure records, credentials, reference portraits
-and model weights are excluded. The preview is not published from this document.
+and model weights are excluded. Actual publication and channel status are
+verified separately from this document.
+
+## Owner-directed publication setup — 2026-11-04
+
+The owner selected [hermes-voice-puck-zentari](https://github.com/mike-zentarisystems/hermes-voice-puck-zentari),
+directed Apache-2.0 publication of Zentari-owned source including the extracted
+gateway, and designated **info@zentarisystems.io** as the monitored private
+security/conduct contact. Vendor/dependency licenses remain separate. Distribution
+is limited to source and the scripted static demo; no firmware/container binary,
+model weight or reference portrait is included.
+
+The private vulnerability form and issue-routing configuration are supplied.
+GitHub's reporting feature is activated and checked separately when the new
+repository becomes public. Actual email/notification receipt remains unverified
+until an end-to-end check is observed; see [the maintainer procedure](MAINTAINER.md).
+
+November 4 engineering checks include 46 Linux public tests, 76 gateway tests,
+42 browser unit tests, 22 native suites and an ESP-IDF OTA-mode build. The two
+new compiled regressions cover OTA startup priority and timed-out display DMA
+lifetime. The connected Puck's accepted firmware passed owner voice checks;
+these newer source fixes are not flashed. A static AI baseline review found no
+reportable vulnerabilities with explicit generated-pixel exclusions. It does not
+replace independent human, legal, binary, hardware or elapsed-soak acceptance.
 
 ## Real-model review follow-up — 2026-10-29
 
@@ -23,8 +46,9 @@ warm the selected model before the initial test. The limit remains fail-closed.
 The review fixed speech-worker paths, resampling thread accumulation, missing
 model-vocabulary readiness, TLS signing-key exposure, and packaging gaps.
 This is an engineering review with executable regression tests, not independent
-security or legal approval. Hardware, unfamiliar-machine/operator acceptance,
-public reporting, distribution rights and public-release authorization remain open.
+security or legal approval. This historical result does not establish hardware,
+unfamiliar-machine/operator, reporting-receipt or third-party binary acceptance.
+Current owner source-license and contact decisions are recorded above.
 
 ## Executed software evidence
 
@@ -54,8 +78,8 @@ independent security audit. Workflow and packaging tools require final-tree chec
 | Gate | Engineering progress | Still required for the full gate |
 | --- | --- | --- |
 | OSS-01 baseline | Prior voice phase accepted; new public art/core tested | Exact new public firmware/web/model/board physical acceptance |
-| OSS-02 product/brand | Local-first browser + reference hardware boundary documented | Owner repository/name/trademark decision |
-| OSS-03 code/vendor rights | Root/vendor notices retained; 34-package inventory | Gateway ownership/license authorization and dependency/binary obligations review |
+| OSS-02 product/brand | Owner selected the preview repository/name; local-first browser/reference boundary documented | Stable product/brand and trademark review |
+| OSS-03 code/vendor rights | Owner directed Apache-2.0 for Zentari-owned gateway; root/vendor notices and package inventory retained | Third-party dependency/binary obligations and independent rights review |
 | OSS-04 artwork/models | Unclear artwork and weights omitted; original geometric art generated | Confirm final distribution inventory contains only cleared assets |
 | OSS-05 standalone gateway | Extracted gateway plus local OpenAI-compatible adapter; real TLS fixture round trip | Independent replication of real local STT/chat/TTS acceptance |
 | OSS-06 clean export | Explicit source/overlay allowlist; private provenance outside export; scans | Independent exact final tree and new-history review |
@@ -65,7 +89,7 @@ independent security audit. Workflow and packaging tools require final-tree chec
 | OSS-10 security | Threat model and bounded adapter errors/egress | Independent auth/privacy/update review and findings closure |
 | OSS-11 hardening | Origin/CSRF/logout/session tests, expiry, bounds, CSP/cache | Measured adversarial load, full independent review |
 | OSS-12 privacy | Device/principal context, reset/expiry tests, RAM-only documented | Independent retention and identity-remap review |
-| OSS-13 reporting | SECURITY.md and disclosure procedure | Named private contact; enabled reporting; tested receipt/notifications |
+| OSS-13 reporting | Owner-designated monitored contact, private form, issue routing and triage procedure | Live feature check and observed end-to-end receipt/notifications |
 | OSS-14 software/models | Native, Linux gateway, locked image, two full browser engines | Actual phone audio, full WebKit microphone path, independent model replication |
 | OSS-15 hardware/performance | Reference board/provenance and C tests retained | New physical baseline and p50/p95/resource measurements |
 | OSS-16 charging | Experimental boundary documented | Attended charge/discharge/low-battery/thermal measurements |
@@ -76,7 +100,7 @@ independent security audit. Workflow and packaging tools require final-tree chec
 | OSS-21 release automation | Action/image digest pins, wheel hashes, SBOM, read-only CI and manual Pages workflow | Hosted clean run, firmware matrix and OS/license/scanner coverage |
 | OSS-22 artifacts/recovery | Exact source manifest and deterministic packaging tooling | Second-builder/signature review and independent install/rollback replication |
 | OSS-23 beta | Explicit experimental scope and known limitations | Consented external browser/hardware beta and blocker closure |
-| OSS-24 public authorization | Candidate source can be inspected before publication | Owner approves exact repository, license, manifest and public visibility |
+| OSS-24 public authorization | Owner selected the new repository and directed experimental Apache-2.0 source/demo publication | Stable release needs its own final manifest, acceptance and authorization |
 | OSS-25 maintenance | Governance/recovery requirements documented | Named second release-capable maintainer and accepted triage/support duties |
 
 These gates are not marked passed because a checklist or harness exists.

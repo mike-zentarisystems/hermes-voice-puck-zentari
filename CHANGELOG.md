@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.0-preview reporting setup — 2026-11-04
+
+- Record Apache-2.0 publication direction for Zentari-owned extracted gateway
+  source while preserving separate third-party licenses and notices.
+- Designate info@zentarisystems.io for private security/conduct reports, add a
+  private vulnerability form and route sensitive reports away from public issues.
+- Document administrator checks, private triage, delivery verification and the
+  experimental source/demo publication boundary. Delivery receipt remains a
+  separate observed check; no message is sent by these setup changes.
+
 ## 0.1.0-preview startup review — 2026-11-04
 
 - Select the experimental OTA acceptance path before its required WSS mode.
