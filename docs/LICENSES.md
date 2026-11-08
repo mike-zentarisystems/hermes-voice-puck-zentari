@@ -14,7 +14,9 @@ headers are retained. Do not assume this overrides a component's own license.
 | Python dependencies | Exact Linux wheel lock and SBOM.cdx.json | Review full wheel license files and transitive obligations before binary/image distribution |
 | Piper runtime | Upstream Piper licensing must be reviewed, including GPL obligations | Do not treat root Apache license as covering this runtime or ship images without review |
 | Chat/STT/TTS models | Separately acquired; individual model-card licenses | No weights bundled; operator verifies use/redistribution and checksums |
-| Original portraits | Redistribution rights not established | Omitted, including derived RGB565/RLE data; new procedural assets replace them |
+| Earlier standalone reference portraits | Redistribution rights not established for those exact files | Omitted as standalone assets, including their derived RGB565/RLE data; procedural assets replace them |
+| Official Hermes / Nous Girl white SVG and its presentation derivatives | NousResearch/hermes-agent at pinned revision; MIT, copyright 2025 Nous Research | Exact logo and full MIT notice included; attribution and independent-project labeling retained; see media provenance |
+| Owner-supplied hardware demo video and extracted still | Supplied by the owner with express permission for this repository presentation | Depicts an older installed puck, including its displayed portrait; not proof of current-public-source acceptance or a blanket license to separately reuse the portrayed artwork |
 
 The SBOM describes resolved Python packages, not all OS packages, firmware
 components or model terms. It is an inventory, not a legal opinion. Add OS and

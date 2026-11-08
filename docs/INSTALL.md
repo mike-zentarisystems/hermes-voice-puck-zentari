@@ -5,6 +5,38 @@ Linux user; do not run the application as root. `.runtime` is mode 700 and
 private JSON/key files are mode 600. Compose uses that same UID/GID. On Windows,
 use WSL2 with the checkout in the Linux filesystem so these modes are meaningful.
 
+## Install the browser PWA
+
+The real browser client is a **Progressive Web App (PWA)**: it can launch in a
+standalone window on supported browsers. Its [manifest](../pwa/client/manifest.json)
+and [service worker](../pwa/client/sw.js) provide installation metadata and a
+cached offline shell. **Offline shell does not mean offline AI:** text and voice
+turns still need the running bridge/gateway and configured model services. No
+puck is required to use the browser client.
+
+First complete the [README quick start](../README.md#run-the-real-browser-client-on-linux),
+verify TLS trust below, open `https://localhost:8443`, and sign in through
+**Settings**. Install that real client, not the hardware-free scripted demo built
+by `tools/build_site.py`; the demo is a separate static site, not this PWA.
+
+- **Chrome on desktop:** use the address-bar install action when offered, then
+  follow the browser's prompts ([Chrome help](https://support.google.com/chrome/answer/9658361)).
+- **Chrome on Android:** open the browser menu and choose **Add to Home screen**
+  / **Install** when available ([Android help](https://support.google.com/chromebook/answer/9658361?co=GENIE.Platform%3DAndroid&hl=en)).
+- **Safari on iPhone:** open the Share menu, choose **Add to Home Screen**, and
+  enable **Open as Web App** if offered ([Apple help](https://support.apple.com/en-az/guide/iphone/iphea86e5236/26/ios/26)).
+- **Safari on supported macOS versions:** choose **File → Add to Dock**
+  ([Apple help](https://support.apple.com/en-ie/104996)).
+- **Other browsers:** use their install/app menu if supported, or keep using the
+  client in a tab. Installation controls and microphone support vary by browser
+  and OS; the presence of an icon is not proof of tested voice support.
+
+The app needs trusted HTTPS. Do not bypass a certificate warning to install it.
+The default server is loopback-only: `localhost` on a phone means the phone,
+not your Linux host. Phone access requires a separately reviewed reachable HTTPS
+setup with a valid certificate and matching origin configuration; these install
+steps do not expose the service to the network.
+
 ## TLS trust
 
 The setup certificate is local to this installation and expires with the chosen

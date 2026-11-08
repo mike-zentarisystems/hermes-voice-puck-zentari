@@ -1,10 +1,77 @@
 # Zenti by Zentari
 
-A local-first voice companion for your browser and a round ESP32-S3 puck.
-Talk, type, cancel a reply, reset a conversation, and choose a companion.
+**One Hermes voice agent across your phone and puck, with actions you can see
+and control.** That is the direction of this independent Zentari project.
+
+Today, the source provides an installable **browser PWA**, a local-first voice
+gateway, and experimental **round ESP32-S3 puck** firmware. Talk, type, cancel a
+reply, and reset a conversation. Use the browser without hardware, or explore
+the reference puck. Direct Hermes, cross-device handoff and visible agent-action
+approval are planned; they are not enabled by the current quick start.
 
 **Experimental source preview.** The browser demo is scripted. Hardware source is
 experimental. A stable 1.0 release is not accepted; see [release status](docs/RELEASE-STATUS.md).
+
+[Install the PWA](docs/INSTALL.md#install-the-browser-pwa) ·
+[Puck parts and materials](docs/PUCK-MATERIALS.md) ·
+[Architecture](docs/ARCHITECTURE.md)
+
+![Zentari Voice browser PWA and experimental ESP32-S3 puck, with the official Nous Research Hermes logo. Direct Hermes integration is planned.](docs/media/zentari-voice-overview.png)
+
+Hermes / Nous Girl logo © 2025 Nous Research, used with its
+[MIT notice](third_party/nous-research/LICENSE). This is an independent Zentari
+project; no Nous Research affiliation or endorsement is implied.
+
+## Watch the physical puck
+
+[Watch the owner-recorded puck demo (14 seconds, MP4)](docs/media/video/puck-demo-2026-11-07.mp4)
+
+<a href="docs/media/video/puck-demo-2026-11-07.mp4"><img src="docs/media/puck-demo-still.png" width="270" alt="Frame from the owner-recorded physical puck video, showing its Speaking state and touch controls."></a>
+
+Recorded on the owner's installed puck, supplied as the November 7 demo. It
+shows touch-to-talk and the Listening, Thinking and Speaking states. The frame
+above is taken from that video, not a render or browser screenshot. The clip
+does not identify the firmware commit, backend or model, and does not establish
+acceptance of this public source. [Media sources and limits](docs/media/README.md).
+
+## Browser app or physical puck?
+
+| | Browser PWA | Experimental puck |
+| --- | --- | --- |
+| Where it runs | Desktop or mobile browser; standalone app window on supported browsers | Waveshare ESP32-S3-Touch-LCD-1.85C BOX Rev2 |
+| Controls | Text, hold-to-talk, mute, cancel, settings and local transcript export | Round 360×360 touch display, hold-to-talk, menu and volume controls |
+| What it needs | A trusted HTTPS gateway and configured chat/speech models | Reviewed firmware/configuration plus a reachable gateway and model services |
+| Offline | Cached app shell; voice and AI still need the gateway | No on-device model inference claim |
+
+The no-account web demo below is a separate scripted tour. It is not the live
+PWA or an AI benchmark. Browser and puck conversation contexts do not synchronize.
+
+![Current architecture: browser PWA through a session bridge, or experimental ESP32-S3 puck, connects to the voice gateway and configured speech and chat services. Direct Hermes integration is planned, not selected by this preview.](docs/media/system-overview.svg)
+
+**Hermes direction:** direct Hermes agent integration, without Home Assistant,
+is the intended next step. The current standalone entrypoint uses an
+OpenAI-compatible chat backend; it does not activate the included legacy Hermes
+adapter or expose an agent's tools. See [integration scope](docs/HERMES-INTEGRATION.md).
+
+## What works, what is experimental, what comes next
+
+| Status | Scope |
+| --- | --- |
+| **Implemented in source** | Browser text/voice controls, Stop, mute, reset, local transcript export, PWA installation metadata and offline shell; authenticated gateway with a configured chat backend |
+| **Experimental** | Reference puck firmware, physical controls, signed-approval and OTA source; remaining hardware, battery, recovery and soak acceptance is documented |
+| **Planned** | Direct Hermes agent integration; phone-to-puck conversation handoff; visible agent actions with approval before consequential steps; a simpler guided setup |
+
+The planned experience centers on five things:
+
+- **Direct Hermes:** use the agent through the voice gateway without requiring Home Assistant.
+- **Phone and puck together:** continue the same conversation across devices, with explicit session ownership and reset behavior.
+- **Visible actions:** show what the agent wants to do and keep approval, cancellation and results understandable.
+- **Clear privacy controls:** make microphone, memory, export/reset and any external model routing visible.
+- **Simple setup:** guide users from models and a trusted gateway to an installed PWA or a correctly configured puck.
+
+Cross-device context, real Hermes tools and their approval flow still need
+implementation and end-to-end verification. A screenshot or demo does not move
+a planned feature into the implemented column.
 
 ## Try the web demo — no account or hardware
 
@@ -86,7 +153,9 @@ transcript logs are enabled. Explicit Markdown export downloads a local file.
 
 ## Hardware and development
 
-The reference board is Waveshare ESP32-S3-Touch-LCD-1.85C; see the upstream
+The reference board is Waveshare ESP32-S3-Touch-LCD-1.85C BOX Rev2. See the
+[parts and materials guide](docs/PUCK-MATERIALS.md) for the display, audio,
+enclosure, power, battery and host-computer requirements. See the upstream
 revision and pin provenance in [hardware](hardware/pinmap.json) and
 [vendor notices](third_party/waveshare/UPSTREAM.md). Similar names do not establish
 pin compatibility. ESP-IDF 6.1 is the firmware baseline.
@@ -117,8 +186,10 @@ Do not flash the accepted private installation with this preview.
 
 The source export has no private repository history, production configuration,
 customer records or model weights. Procedural public artwork is generated from
-source; the original reference portraits are omitted. Existing Apache-2.0 and
-vendor notices are retained. The owner selected Apache-2.0 for the Zentari-owned
+source; the earlier standalone reference portraits remain omitted. Presentation
+media separately includes the official upstream Hermes logo with its MIT notice
+and owner-supplied hardware footage; see [media provenance](docs/media/README.md).
+Existing Apache-2.0 and vendor notices are retained. The owner selected Apache-2.0 for the Zentari-owned
 source, including the extracted gateway; third-party licenses remain separate.
 Private security and conduct contact: [info@zentarisystems.io](mailto:info@zentarisystems.io).
 See [the license inventory](docs/LICENSES.md) and [maintainer procedure](docs/MAINTAINER.md).
