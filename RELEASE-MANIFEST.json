@@ -834,8 +834,8 @@
     },
     {
       "path": "pwa/client/audio.js",
-      "bytes": 10654,
-      "sha256": "11f53fccabae2ed1c7e679de9f705c1ca0c312da6a045bc32ad0bd80a3880b89"
+      "bytes": 11400,
+      "sha256": "6575117640b1463808e23ad72662d8c0b4814fe1e29a875a4d047e23b7dabd96"
     },
     {
       "path": "pwa/client/avatar.js",

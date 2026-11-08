@@ -34,7 +34,14 @@
         });
       }
       // Called from the input gesture so autoplay policies permit resume.
-      const resume = this.ctx.resume();
+      // A context that cannot start (no audio backend, blocked autoplay) may
+      // leave resume() pending indefinitely; bound the wait so callers such as
+      // text send are never held hostage by audio. The context still exists and
+      // may start on a later gesture; a suspended context simply stays silent.
+      const resume = Promise.race([
+        this.ctx.resume(),
+        new Promise(resolve => setTimeout(resolve, 1000)),
+      ]);
       try { await Promise.all([this._init, resume]); }
       catch { await this.dispose(); throw Error('audio_unavailable'); }
     }
@@ -150,10 +157,15 @@
     get state() { return { level: this.level, muted: this.muted, effective: this.effectiveVolume }; }
     _onAudioFrame(buffer) {
       if (!this.voiceReplies) return;
-      if (!this.ctx || this.ctx.state !== 'running' || !this.player ||
-          !buffer.byteLength || buffer.byteLength > 1024 || buffer.byteLength % 2) {
+      if (!buffer.byteLength || buffer.byteLength > 1024 || buffer.byteLength % 2) {
         this.gateway.cancel('playback_backpressure'); return;
       }
+      // Audio that cannot render (no context yet, or a context that is not
+      // running, e.g. suspended with no audio backend) is dropped, not
+      // treated as backpressure: the turn completes as text instead of
+      // being cancelled mid-reply. Playback drain is already satisfied
+      // because nothing was queued.
+      if (!this.ctx || this.ctx.state !== 'running' || !this.player) return;
       const copy = buffer.slice(0);
       this.player.port.postMessage({ type: 'pcm', gen: this.playGen, buffer: copy }, [copy]); this.pending = true;
       if (!this.playing) { this.playing = true; this._emit('playback-start'); }
