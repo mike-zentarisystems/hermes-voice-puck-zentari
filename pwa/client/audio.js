@@ -14,6 +14,7 @@
       gateway.addEventListener('audio-start', () => { this.stopPlayback(); this.outputEnded = false; });
       gateway.addEventListener('audio', e => this._onAudioFrame(e.detail.data));
       gateway.addEventListener('audio-end', () => {
+        if (!this.ctx || this.ctx.state !== 'running' || !this.player) this._discardPlayback();
         this.outputEnded = true;
         if (this.pending) this.player.port.postMessage({ type: 'end', gen: this.playGen }); else this._drained();
       });
@@ -23,6 +24,9 @@
       if (!this.ctx) {
         this.ctx = new (window.AudioContext || window.webkitAudioContext)();
         const ctx = this.ctx;
+        ctx.onstatechange = () => {
+          if (this.ctx === ctx && ctx.state !== 'running') this._discardPlayback();
+        };
         this.gain = ctx.createGain(); this.analyser = ctx.createAnalyser(); this.analyser.fftSize = 256;
         this.gain.connect(ctx.destination); this._applyGain();
         this._init = Promise.all(['./capture-worklet.js', './playback-worklet.js'].map(url => ctx.audioWorklet.addModule(url))).then(() => {
@@ -51,6 +55,7 @@
       try {
         await this.init();
         if (token !== this.generation) return false;
+        if (this.ctx?.state !== 'running') throw Error('audio_unavailable');
         const stream = await navigator.mediaDevices.getUserMedia({ audio: {
           ...(this.inputDevice ? { deviceId: { exact: this.inputDevice } } : {}),
           channelCount: 1, echoCancellation: true, noiseSuppression: true, autoGainControl: true
@@ -163,12 +168,19 @@
       // Audio that cannot render (no context yet, or a context that is not
       // running, e.g. suspended with no audio backend) is dropped, not
       // treated as backpressure: the turn completes as text instead of
-      // being cancelled mid-reply. Playback drain is already satisfied
-      // because nothing was queued.
-      if (!this.ctx || this.ctx.state !== 'running' || !this.player) return;
+      // being cancelled mid-reply. Invalidate any earlier queued frames too.
+      if (!this.ctx || this.ctx.state !== 'running' || !this.player) {
+        this._discardPlayback(); return;
+      }
       const copy = buffer.slice(0);
       this.player.port.postMessage({ type: 'pcm', gen: this.playGen, buffer: copy }, [copy]); this.pending = true;
       if (!this.playing) { this.playing = true; this._emit('playback-start'); }
+    }
+    _discardPlayback() {
+      if (!this.pending && !this.playing) return;
+      const ended = this.outputEnded;
+      this.stopPlayback(); this.outputEnded = ended;
+      if (ended) this._drained(); else this._emit('playback-end');
     }
     _onPlayer(data) {
       if (data.gen !== this.playGen) return;
@@ -187,6 +199,7 @@
       this.abortCapture(); this.stopPlayback();
       if (this.player) { this.player.port.onmessage = null; this.player.port.close(); this.player.disconnect(); this.player = null; }
       const ctx = this.ctx; this.ctx = null; this.gain = null; this._init = null;
+      if (ctx) ctx.onstatechange = null;
       if (ctx && ctx.state !== 'closed') await ctx.close();
     }
     _emit(type, detail) { this.dispatchEvent(new CustomEvent(type, { detail })); }

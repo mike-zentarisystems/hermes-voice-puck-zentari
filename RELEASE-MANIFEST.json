@@ -49,8 +49,8 @@
     },
     {
       "path": ".github/workflows/validate.yml",
-      "bytes": 1948,
-      "sha256": "29ebab5324894d690e5126eae2b96469e477d51d553335bd7b9adbf78f03abe1"
+      "bytes": 2349,
+      "sha256": "93ff6a98eb49a13a087f870b17bc3fde7f37016fc32e079603c265012a6c4fdb"
     },
     {
       "path": ".gitignore",
@@ -834,8 +834,8 @@
     },
     {
       "path": "pwa/client/audio.js",
-      "bytes": 11400,
-      "sha256": "6575117640b1463808e23ad72662d8c0b4814fe1e29a875a4d047e23b7dabd96"
+      "bytes": 11996,
+      "sha256": "1d47dfdeeb3862efc4681799acc051744f686a7850209ba7be852e245900a2a9"
     },
     {
       "path": "pwa/client/avatar.js",
@@ -1369,8 +1369,8 @@
     },
     {
       "path": "tests/pwa/voice.test.cjs",
-      "bytes": 21762,
-      "sha256": "26cbd8830f37bbce7904d3cc1b81be299ab5434881a21d2309a62332d1672212"
+      "bytes": 24413,
+      "sha256": "a2b25742b558a595a15be0c7327ebc482c5dd6930a47b87429853956af30c649"
     },
     {
       "path": "tests/test_lcd_fill_lifetime.py",

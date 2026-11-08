@@ -30,6 +30,15 @@ jobs:
           python tools/build_site.py
       - name: Chromium full PWA and demo (synthetic media and model)
         run: node --test tests/pwa/browser.e2e.cjs tests/pwa/demo.e2e.cjs tests/pwa/accessibility.e2e.cjs
+      # Firefox needs a running audio backend even with synthetic microphone media.
+      - name: Virtual audio backend for Firefox
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes pulseaudio
+          pulseaudio --start --exit-idle-time=-1
+          pactl load-module module-null-sink sink_name=ci_audio
+          pactl set-default-sink ci_audio
+          pactl info
       - name: Firefox full PWA and demo (synthetic media and model)
         env:
           ZV_TEST_BROWSER: firefox
