@@ -28,14 +28,14 @@
       "sha256": "3f8425f5306dd2dd4a8b5c2a44de51fb38f73d4c99f6a92936a9fe6a763608a8"
     },
     {
-      "path": ".github/pull_request_template.md",
-      "bytes": 348,
-      "sha256": "aa8ada618b79afad540c8a01f2c02cf9455b23717233fe1099d272fa4fa73036"
-    },
-    {
       "path": ".github/VULNERABILITY_REPORT.yml",
       "bytes": 1012,
       "sha256": "ea8a812fe18b45f8117be9c1acef873576d4c657a80dd1b128e93413f794f372"
+    },
+    {
+      "path": ".github/pull_request_template.md",
+      "bytes": 348,
+      "sha256": "aa8ada618b79afad540c8a01f2c02cf9455b23717233fe1099d272fa4fa73036"
     },
     {
       "path": ".github/workflows/firmware.yml",
@@ -63,11 +63,6 @@
       "sha256": "e3eec9a7385c64b20fdbc801193e73483a2110833c3d74e32cde43c525cf4639"
     },
     {
-      "path": "assets/avatar/reference-v4.rgb565",
-      "bytes": 54592,
-      "sha256": "7630f26aa83f6e55cc859239dda72de8c902c326b232f2c86d4d5487718a47c6"
-    },
-    {
       "path": "CHANGELOG.md",
       "bytes": 2733,
       "sha256": "781a8ac487a629889e9c84276571e2c868e90587cd50e8f49b31388b49dea98b"
@@ -81,6 +76,56 @@
       "path": "CODE_OF_CONDUCT.md",
       "bytes": 960,
       "sha256": "5e5bc11c7bec6a1a69d52b5cd53a8192c5ac40987011d204575720d1bd7785ef"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "bytes": 1415,
+      "sha256": "6cb45bd729ffe4aa41ac8add4b0c599e423e9e316b906b2f7cec7bc376b49fb6"
+    },
+    {
+      "path": "Dockerfile",
+      "bytes": 472,
+      "sha256": "2326b188d8fea346739caa423e97e08415739193f023ffc98a73cf1d257c30ca"
+    },
+    {
+      "path": "GOVERNANCE.md",
+      "bytes": 878,
+      "sha256": "702f78483f8541b43fc87db3d2621adcd0dfdf9647f42a08f210ea44b95b2e79"
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "NOTICE",
+      "bytes": 3412,
+      "sha256": "724ea2cb1ef239900baeee2e924ea390c509aa9ee031a409f1d81a8c22395f09"
+    },
+    {
+      "path": "README.md",
+      "bytes": 11486,
+      "sha256": "8858939c91c625206543bcb90972ae1a51da0c547edc94405732d0dd7dca6635"
+    },
+    {
+      "path": "SBOM.cdx.json",
+      "bytes": 13993,
+      "sha256": "b9f7fb01edbc3efc2678c6b3cd2ac2c52eeebc718e74da513aa0bd9341f5a765"
+    },
+    {
+      "path": "SECURITY.md",
+      "bytes": 2157,
+      "sha256": "115207028cd0377f45923c3382a3ccaac4edf84b4aa0b0e69fb35125c1a31c3e"
+    },
+    {
+      "path": "SUPPORT.md",
+      "bytes": 1257,
+      "sha256": "56cd60e2c73d5f08e7fef80b4a3522b72452c2d8ea7f73c7c3972113c6b4f96b"
+    },
+    {
+      "path": "assets/avatar/reference-v4.rgb565",
+      "bytes": 54592,
+      "sha256": "7630f26aa83f6e55cc859239dda72de8c902c326b232f2c86d4d5487718a47c6"
     },
     {
       "path": "components/zv_audio/CMakeLists.txt",
@@ -538,19 +583,9 @@
       "sha256": "90051d4219f01a9a7fffa07e0aacaa8627040671928d557fed0ada82a9a04718"
     },
     {
-      "path": "CONTRIBUTING.md",
-      "bytes": 1415,
-      "sha256": "6cb45bd729ffe4aa41ac8add4b0c599e423e9e316b906b2f7cec7bc376b49fb6"
-    },
-    {
       "path": "dependencies.lock",
       "bytes": 1170,
       "sha256": "9a32cbe307e6bbbebec38d8c38aefae679a0a7e5612b5126a3fba90cfe18c7fb"
-    },
-    {
-      "path": "Dockerfile",
-      "bytes": 472,
-      "sha256": "2326b188d8fea346739caa423e97e08415739193f023ffc98a73cf1d257c30ca"
     },
     {
       "path": "docs/ARCHITECTURE.md",
@@ -559,23 +594,33 @@
     },
     {
       "path": "docs/HARDWARE.md",
-      "bytes": 2584,
-      "sha256": "e94d57f92b1d135763a02a879776c061ee7f763dfd7a5c3b8b9acccdf1540635"
+      "bytes": 2984,
+      "sha256": "18d6e6d4c5afaf07c208c9375fa7af78e2e09aedcebb1d6c73bfa7d47720febc"
+    },
+    {
+      "path": "docs/HERMES-INTEGRATION.md",
+      "bytes": 3859,
+      "sha256": "7e787c7ede3d12f9c9f426cdb515c53ac409677de279a47fd8829d53132e983c"
     },
     {
       "path": "docs/INSTALL.md",
-      "bytes": 6257,
-      "sha256": "a720969e0d303e4af0b736a57e74f79e56895eb21bf40a8525edd44aa9486348"
+      "bytes": 8390,
+      "sha256": "ddf101b6646a9ff85c1c193a3e21e6512f9c4d3f08206a91bfefd38139bc58d8"
     },
     {
       "path": "docs/LICENSES.md",
-      "bytes": 2868,
-      "sha256": "309cbdb5355bc71c441f62e9aee55ad37d70d9d6375dcf3ebcf127354ce268b7"
+      "bytes": 3527,
+      "sha256": "7e29d43de1c954d562efc941a6e5c3ab3d373d60b2fbb82154421b8c73690138"
     },
     {
       "path": "docs/MAINTAINER.md",
       "bytes": 3592,
       "sha256": "d00e374504dea4de1321fbd96e0bc809745c982d41474649382f5c75ceb57e46"
+    },
+    {
+      "path": "docs/PUCK-MATERIALS.md",
+      "bytes": 3228,
+      "sha256": "344dd0d7c904423e75b88d3f933b772389691715d263d0216876194190e730f8"
     },
     {
       "path": "docs/RELEASE-STATUS.md",
@@ -593,19 +638,44 @@
       "sha256": "09c5460f84b2b5c214cd7ec6fc060d27405633c963aacc6acaef81e36ba5112a"
     },
     {
-      "path": "GOVERNANCE.md",
-      "bytes": 878,
-      "sha256": "702f78483f8541b43fc87db3d2621adcd0dfdf9647f42a08f210ea44b95b2e79"
+      "path": "docs/media/README.md",
+      "bytes": 2268,
+      "sha256": "38894d5052d6a2864bfc60cc0f17fc5c0698176240d4bcf334f1314e354c23ea"
+    },
+    {
+      "path": "docs/media/hermes/nous-girl-white.svg",
+      "bytes": 139596,
+      "sha256": "d84d87421e321d94bb210f914e6fd55307e045655ab122446547f516d3aaf06e"
+    },
+    {
+      "path": "docs/media/puck-demo-still.png",
+      "bytes": 626485,
+      "sha256": "e765328b83f5f6a2c09182c9301c20b82a2b253f9bb3c17edcb8a86d0646afa0"
+    },
+    {
+      "path": "docs/media/system-overview.svg",
+      "bytes": 3175,
+      "sha256": "435802b2efe761eeaff312e9a8a4389f4fe71b58f22049982a0d4eb791af7108"
+    },
+    {
+      "path": "docs/media/video/puck-demo-2026-11-07.mp4",
+      "bytes": 890022,
+      "sha256": "90c0f3c24123e2b43ce88b59827b202b93c42f2bd0d649ce4b4f111df6b78ad2"
+    },
+    {
+      "path": "docs/media/zentari-voice-overview.png",
+      "bytes": 208422,
+      "sha256": "3b07b472d7049203fdd8b6e2871b4ac4e76566203b99035f2856ab4d4055f2f8"
+    },
+    {
+      "path": "docs/media/zentari-voice-overview.svg",
+      "bytes": 142341,
+      "sha256": "e164330dd8f6e8ae2e47c74bb90cc710dfa9e7ce8563942a773d65542de44472"
     },
     {
       "path": "hardware/pinmap.json",
       "bytes": 17720,
       "sha256": "a5ca998c78cbb3c3bcf051a314c52169b2fb397ac50cfdb21e86985c563efc78"
-    },
-    {
-      "path": "LICENSE",
-      "bytes": 11357,
-      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
     },
     {
       "path": "main/CMakeLists.txt",
@@ -623,14 +693,14 @@
       "sha256": "2cb792ca955595b17587e66619414c206411f8cb1408ed55b3e4a60f9be57f5d"
     },
     {
-      "path": "NOTICE",
-      "bytes": 2917,
-      "sha256": "b969d039118f37ddc1cf36444a4d3320e64cdb5d233b3650e8cab004b7444e49"
-    },
-    {
       "path": "partitions.csv",
       "bytes": 353,
       "sha256": "6f61a9c29d7281b1ed1a1f8d15ece3a19a3723588891a386bb0ecdf55e497cfa"
+    },
+    {
+      "path": "protocol/v1/README.md",
+      "bytes": 4953,
+      "sha256": "7ff66f237b6febd20c859e109e8e8d84f8eb86f40d1cfe3ec60ce28016691665"
     },
     {
       "path": "protocol/v1/examples/approval.request.json",
@@ -691,11 +761,6 @@
       "path": "protocol/v1/examples/valid/approval.response.json",
       "bytes": 505,
       "sha256": "567644686ed84166467c09594b94706a1bb888d950d3208f60f78bd71c1fa4d7"
-    },
-    {
-      "path": "protocol/v1/README.md",
-      "bytes": 4953,
-      "sha256": "7ff66f237b6febd20c859e109e8e8d84f8eb86f40d1cfe3ec60ce28016691665"
     },
     {
       "path": "protocol/v1/schemas/approval.request.schema.json",
@@ -938,11 +1003,6 @@
       "sha256": "78d8a257dce92c33ce68205f70ef6b65d638212ccf8f09ef0f9cc0d62ada7f77"
     },
     {
-      "path": "README.md",
-      "bytes": 6619,
-      "sha256": "b4ac2bdaab460cf74d942ce49d6c0c29596a329bef12ced5d34ba848bc8df819"
-    },
-    {
       "path": "requirements.lock",
       "bytes": 3347,
       "sha256": "f65739d0313a1ab17ec162ba6179f56f1b6c3a4c02ff72321f69e9ea292b4f48"
@@ -951,11 +1011,6 @@
       "path": "requirements.txt",
       "bytes": 98,
       "sha256": "c0c3134a4d362db52cbad1fd35df502228096a2500ae0d6f67c0a8ece61f606c"
-    },
-    {
-      "path": "SBOM.cdx.json",
-      "bytes": 13993,
-      "sha256": "b9f7fb01edbc3efc2678c6b3cd2ac2c52eeebc718e74da513aa0bd9341f5a765"
     },
     {
       "path": "scripts/tests/test_voice_conversation.py",
@@ -1053,11 +1108,6 @@
       "sha256": "02aaae4265dd4968da9286a9b3e1741bcf1155d571d6807d50b36f6421387773"
     },
     {
-      "path": "SECURITY.md",
-      "bytes": 2157,
-      "sha256": "115207028cd0377f45923c3382a3ccaac4edf84b4aa0b0e69fb35125c1a31c3e"
-    },
-    {
       "path": "server.py",
       "bytes": 5177,
       "sha256": "f504c26114f4608f8246468cc9ad8fc62da1279831df509b262e392e8892dabd"
@@ -1131,11 +1181,6 @@
       "path": "site/index.html",
       "bytes": 4132,
       "sha256": "a5cb4d69896eac006937e287002b0d9c79b722e016102bba49c14c80861d7a0f"
-    },
-    {
-      "path": "SUPPORT.md",
-      "bytes": 1257,
-      "sha256": "56cd60e2c73d5f08e7fef80b4a3522b72452c2d8ea7f73c7c3972113c6b4f96b"
     },
     {
       "path": "tests/host/CMakeLists.txt",
@@ -1366,6 +1411,16 @@
       "path": "tests/test_standalone_tls.py",
       "bytes": 6550,
       "sha256": "fcf94ab0ff4db2163b30698478e7776ff7de12dd2a279e4cdbafbe7841b64b6f"
+    },
+    {
+      "path": "third_party/nous-research/LICENSE",
+      "bytes": 1070,
+      "sha256": "821556e6336796450ab852d375117b48a4887e71d255794fd6318d99982a5ab6"
+    },
+    {
+      "path": "third_party/nous-research/PROVENANCE.md",
+      "bytes": 1605,
+      "sha256": "80805dedb6868a4a8780cbef1a4f2ff1bbb4614cc39e3997f5f8f4bc40753f0c"
     },
     {
       "path": "third_party/waveshare/LICENSE",

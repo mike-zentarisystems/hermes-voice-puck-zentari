@@ -1,8 +1,15 @@
 # Experimental reference hardware
 
-Reference: Waveshare ESP32-S3-Touch-LCD-1.85C. Use the exact revision, pin mapping
-and source provenance in `hardware/pinmap.json` and `third_party/waveshare/`.
-The UI is designed for the circular 360×360 display. ESP-IDF 6.1, the checked-in
+The **puck** is the experimental physical companion, separate from the
+[installable browser PWA](INSTALL.md#install-the-browser-pwa). The reference
+target is **Waveshare ESP32-S3-Touch-LCD-1.85C BOX Rev2**, with a circular
+360×360 display. Start with the [parts and materials overview](PUCK-MATERIALS.md)
+for what is integrated, what you need separately, and package differences.
+
+Use the exact revision, pin mapping and source provenance in
+[`hardware/pinmap.json`](../hardware/pinmap.json) and
+[`third_party/waveshare/`](../third_party/waveshare/UPSTREAM.md).
+The BOX name alone does not establish the revision. ESP-IDF 6.1, the checked-in
 component lock and reviewed board configuration are required. Do not substitute
 a similarly named board without independently checking voltage, pins and buses.
 

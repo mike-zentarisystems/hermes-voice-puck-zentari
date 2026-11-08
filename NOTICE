@@ -3,6 +3,14 @@ Copyright 2026 Zentari Systems
 
 This product is licensed under the Apache License, Version 2.0 (see LICENSE).
 
+Presentation media exceptions: the official Hermes / Nous Girl logo is
+Copyright (c) 2025 Nous Research and is distributed with its MIT license at
+third_party/nous-research/LICENSE. The independent-project presentation does not
+imply Nous Research affiliation or endorsement. Owner-supplied hardware footage
+is included by express permission for this repository presentation; see
+docs/media/README.md. The root source license does not override third-party
+artwork, trademark or footage rights.
+
 The Zentari-owned extracted voice gateway source is included under that license
 by the repository owner's direction of November 4, 2026. Third-party components,
 models and voices retain their own licenses; no model weights are distributed.

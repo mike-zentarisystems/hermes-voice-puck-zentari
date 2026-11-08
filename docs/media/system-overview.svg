@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="730" viewBox="0 0 1440 730" role="img" aria-labelledby="title desc">
+  <title id="title">Zentari Voice: browser PWA and experimental puck</title>
+  <desc id="desc">Current source architecture. The PWA uses an HTTPS session bridge and verified WSS. The experimental puck connects over TLS and HMAC. Both use the voice gateway with local speech services and a configured OpenAI-compatible backend. Direct Hermes integration is planned and is not selected by the current standalone entrypoint.</desc>
+  <defs><linearGradient id="bg"><stop stop-color="#0a1020"/><stop offset="1" stop-color="#191021"/></linearGradient><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#9bd7ef"/></marker></defs>
+  <rect width="1440" height="730" rx="28" fill="url(#bg)"/>
+  <g font-family="Arial, sans-serif" fill="#f8f9ff">
+    <text x="62" y="69" font-size="18" letter-spacing="3" fill="#f4a6d2">ZENTARI VOICE</text>
+    <text x="62" y="125" font-size="40" font-weight="700">Two ways to talk. Your own gateway.</text>
+    <text x="62" y="165" font-size="21" fill="#bbc5d9">Current source architecture · Experimental preview</text>
+    <g fill="#111d2f" stroke="#3d526d" stroke-width="2">
+      <rect x="60" y="227" width="300" height="155" rx="18"/>
+      <rect x="60" y="423" width="300" height="155" rx="18"/>
+      <rect x="460" y="227" width="330" height="155" rx="18"/>
+      <rect x="460" y="423" width="330" height="155" rx="18"/>
+      <rect x="920" y="227" width="460" height="351" rx="18"/>
+    </g>
+    <g font-size="26" font-weight="700"><text x="84" y="273">Browser PWA</text><text x="84" y="469">ESP32-S3 puck</text><text x="485" y="273">Session bridge</text><text x="485" y="469">Voice gateway</text><text x="950" y="273">Configured intelligence</text></g>
+    <g font-size="20" fill="#c2cede"><text x="84" y="312">Text + voice controls</text><text x="84" y="344">Installable app shell</text><text x="84" y="508">Round touch display</text><text x="84" y="540">Experimental firmware</text><text x="485" y="312">HTTPS cookie + CSRF</text><text x="485" y="344">Credentials stay server-side</text><text x="485" y="508">Authenticated sessions</text><text x="485" y="540">Bounded RAM context</text><text x="950" y="320">Local speech-to-text</text><text x="950" y="365">OpenAI-compatible chat backend</text><text x="950" y="410">Local text-to-speech</text><text x="950" y="478" fill="#f4a6d2">Direct Hermes agent: planned</text><text x="950" y="512">No Home Assistant dependency</text><text x="950" y="546" font-size="17">Legacy adapter is not selected by this preview.</text></g>
+    <g fill="none" stroke="#9bd7ef" stroke-width="3" marker-end="url(#arrow)"><path d="M360 300 H446"/><path d="M625 382 V409"/><path d="M360 500 H446"/><path d="M790 500 H905"/></g>
+    <text x="60" y="639" font-size="21" fill="#bbc5d9">Offline shell ≠ offline AI. Browser and puck contexts do not synchronize.</text>
+    <text x="60" y="680" font-size="17" fill="#94a3bc">Source diagram, not a screenshot or evidence of physical hardware acceptance.</text>
+  </g>
+</svg>
