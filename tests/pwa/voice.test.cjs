@@ -311,3 +311,56 @@ test('conversation restoration requires an authenticated matching control and te
   g.openConversation(true); output(g, 'conversation.ready', { conversation_id: uuid(), principal: 'other', capabilities: ['text'] }, g.pendingContext);
   assert.equal(detail.same, false); g.disconnect(); assert.equal(g.contextReady, false);
 });
+
+
+test('pending audio resume is bounded and a later gesture can recover', async () => {
+  const r = audioRuntime();
+  r.ctx.window.AudioContext.prototype.resume = function () { this.state = 'suspended'; return new Promise(() => {}); };
+  const init = r.engine.init();
+  await new Promise(resolve => setImmediate(resolve));
+  [...r.timers.values()].find(t => t.ms === 1000).fn();
+  await init;
+  thinking(r.gateway);
+  output(r.gateway, 'audio.output.start', { format: pcm });
+  output(r.gateway, 'audio.output.chunk', { data: 'AAA=' });
+  output(r.gateway, 'audio.output.stop');
+  assert.equal(r.gateway.turn, null);
+  assert.equal(r.player().posted.filter(m => m.type === 'pcm').length, 0);
+  r.engine.ctx.resume = function () { this.state = 'running'; return Promise.resolve(); };
+  await r.engine.init();
+  assert.equal(r.engine.ctx.state, 'running');
+});
+
+for (const interruption of ['frame', 'end', 'draining']) {
+  test(`interrupted queued playback completes without audio processing: ${interruption}`, async () => {
+    const r = audioRuntime(); await r.engine.init(); thinking(r.gateway);
+    output(r.gateway, 'audio.output.start', { format: pcm });
+    output(r.gateway, 'audio.output.chunk', { data: 'AAA=' });
+    const old = r.engine.playGen;
+    if (interruption === 'draining') output(r.gateway, 'audio.output.stop');
+    r.engine.ctx.state = 'suspended';
+    if (interruption === 'frame') output(r.gateway, 'audio.output.chunk', { data: 'AAA=' });
+    if (interruption === 'draining') r.engine.ctx.onstatechange();
+    else output(r.gateway, 'audio.output.stop');
+    assert.equal(r.gateway.turn, null);
+    assert.equal(r.engine.pending, false); assert.equal(r.engine.playing, false);
+    assert.ok(r.engine.playGen > old);
+    assert.equal(r.player().posted.at(-1).type, 'stop');
+    thinking(r.gateway);
+    r.player().port.onmessage({ data: { type: 'drained', gen: old } });
+    assert.equal(r.gateway.turn.state, 'thinking');
+  });
+}
+
+
+test('unavailable audio context never opens microphone or starts a voice turn', async () => {
+  const r = audioRuntime(); let requested = false;
+  r.ctx.window.AudioContext.prototype.resume = function () { this.state = 'suspended'; return new Promise(() => {}); };
+  r.ctx.navigator.mediaDevices.getUserMedia = async () => { requested = true; throw Error('unexpected mic request'); };
+  const capture = r.engine.startCapture();
+  await new Promise(resolve => setImmediate(resolve));
+  [...r.timers.values()].find(t => t.ms === 1000).fn();
+  assert.equal(await capture, false);
+  assert.equal(requested, false); assert.equal(r.engine.capturing, false);
+  assert.equal(r.gateway.turn, null);
+});
