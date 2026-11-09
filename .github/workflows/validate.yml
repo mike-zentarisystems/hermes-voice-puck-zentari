@@ -20,7 +20,7 @@ jobs:
           node tests/pwa/node_modules/playwright/cli.js install --with-deps chromium firefox webkit
       - name: Scan and test
         run: |
-          python tools/check_release.py
+          python tools/check_release.py --verify-manifest
           python -m unittest discover -s scripts/tests -p 'test_*.py'
           python -m unittest discover -s tests -p 'test_*.py'
           node --test tests/pwa/*.test.cjs
