@@ -4,7 +4,7 @@ const path = require('node:path');
 const fs = require('node:fs');
 async function startFixture(t) {
   const server = spawn(process.env.PYTHON || 'python', [path.join(__dirname, 'browser_fixture.py')], { env: { ...process.env,
-    ZV_CITADEL_GATEWAY_ROOT: path.resolve(__dirname, '../../services/voice-gateway') }, stdio: ['ignore', 'pipe', 'pipe'] });
+    ZV_GATEWAY_ROOT: path.resolve(__dirname, '../../services/voice-gateway') }, stdio: ['ignore', 'pipe', 'pipe'] });
   let stderr = ''; server.stderr.on('data', b => { stderr += b; }); t.after(() => server.kill());
   return await new Promise((resolve, reject) => {
     let line = ''; const timer = setTimeout(() => reject(Error(stderr || 'fixture timeout')), 15000);

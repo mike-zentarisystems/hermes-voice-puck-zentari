@@ -32,7 +32,7 @@ anonymous browser is expected for submitting a report; it is not proof of email
 delivery or maintainer notification receipt.
 
 For an end-to-end delivery check, send a benign email with subject
-**Hermes Voice Puck reporting-channel check** to the designated inbox, and have
+**Hermes Voice Agent reporting-channel check** to the designated inbox, and have
 the inbox owner confirm receipt. A different GitHub account can submit a clearly
 marked non-vulnerability channel test; the owner verifies the private receipt
 and notification, then closes the test privately. Do not create a public advisory,

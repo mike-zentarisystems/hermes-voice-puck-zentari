@@ -7,7 +7,7 @@
   function add(role, text) { const li = document.createElement('li'); li.className = role; li.textContent = text; $('messages').append(li); while ($('messages').children.length > 32) $('messages').firstElementChild.remove(); li.scrollIntoView({block:'nearest'}); }
   function answer(text) {
     if (/private|privacy|data|record/i.test(text)) return 'This preview never records or sends anything. In the full app, microphone capture starts only when you ask. Your gateway keeps bounded conversation context in RAM. Reset clears the active context; remote providers are an explicit opt-in.';
-    if (/local|run|install|setup/i.test(text)) return 'Use the repository’s Compose quick start: create private sign-in settings, trust your local TLS certificate, select a local OpenAI-compatible chat model, and supply speech models whose licenses you have reviewed. No Citadel account is needed.';
+    if (/local|run|install|setup/i.test(text)) return 'Use the repository’s Compose quick start: create private sign-in settings, trust your local TLS certificate, select a local OpenAI-compatible chat model, and supply speech models whose licenses you have reviewed. No account is needed.';
     if (/puck|hardware|desk/i.test(text)) return 'The reference puck uses a round ESP32-S3 display. It supports hold-to-talk, cancellation, menu and volume controls. Public hardware source remains experimental while charging, signed updates, recovery and soak acceptance are open.';
     return 'This is a scripted preview, so I’m not using an AI model here. Try “What stays private?”, “Run locally”, or “Meet the puck”. The full app connects to a model you choose.';
   }

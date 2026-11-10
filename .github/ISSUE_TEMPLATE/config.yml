@@ -4,5 +4,5 @@ contact_links:
     url: https://github.com/mike-zentarisystems/hermes-voice-puck-zentari/security/advisories/new
     about: Use private reporting for security issues. If unavailable, email info@zentarisystems.io. Never post credentials or private data in a public issue.
   - name: Report a conduct concern privately
-    url: mailto:info@zentarisystems.io?subject=Hermes%20Voice%20Puck%20conduct%20report
+    url: mailto:info@zentarisystems.io?subject=Hermes%20Voice%20Agent%20conduct%20report
     about: Contact the repository owner privately about conduct concerns.

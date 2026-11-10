@@ -40,6 +40,16 @@ def initialize(directory, password, origin, backend, model, name, days, allow_re
     descriptor = private_directory(directory.parent)
     os.close(descriptor)
     directory.mkdir(mode=0o700, parents=False)
+    try:
+        _populate(directory, record, origin, url, backend, model, name, days, allow_remote)
+    except BaseException:
+        # The directory was created by this run, so removing it lets setup be retried cleanly.
+        shutil.rmtree(directory, ignore_errors=True)
+        raise
+    print('Created private configuration. Trust only ca.pem after verifying its SHA-256 fingerprint locally.')
+
+
+def _populate(directory, record, origin, url, backend, model, name, days, allow_remote):
     os.chmod(directory, 0o700)
     def write(name, value):
         with os.fdopen(os.open(directory / name, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600), 'w') as stream:
@@ -86,7 +96,6 @@ def initialize(directory, password, origin, backend, model, name, days, allow_re
     os.chmod(directory / 'server-key.pem', 0o600)
     os.chmod(directory / 'server.pem', 0o644)
     os.chmod(directory / 'ca.pem', 0o644)
-    print('Created private configuration. Trust only ca.pem after verifying its SHA-256 fingerprint locally.')
 
 
 if __name__ == '__main__':
@@ -110,5 +119,7 @@ if __name__ == '__main__':
     try:
         initialize(args.directory, password, args.origin, args.backend, args.model, args.name,
                    args.days, args.allow_remote)
-    except (ValueError, OSError, subprocess.CalledProcessError):
-        parser.exit(1, 'Setup incomplete; inspect local prerequisites and the private directory. Existing files were not overwritten.\n')
+    except subprocess.CalledProcessError:
+        parser.exit(1, 'Setup incomplete: OpenSSL could not create the local certificates. Nothing was kept; fix OpenSSL and run setup again.\n')
+    except (ValueError, OSError) as error:
+        parser.exit(1, f'Setup incomplete: {error}. Existing files were not overwritten; fix this and run setup again.\n')

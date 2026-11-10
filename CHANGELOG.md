@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.1.0-preview plain-English docs and setup fixes — 2026-11-10
+
+- Add `eli10.md`, a plain-English overview of what the project is, what works
+  today and how to try it.
+- Rewrite the README around a short quick start: x86-64 requirement, making
+  Ollama reachable from the container without exposing it to the network, and
+  example speech-model downloads.
+- `tools/setup.py` now prints the reason when setup fails and removes a
+  half-created configuration directory, so setup can be run again.
+- Rename the project to Hermes Voice Agent in docs, report subjects, the
+  browser app title and install name, and the overview image; replace private
+  infrastructure names in comments, tests and the demo with neutral wording.
+- Fix two missing-file references in NOTICE and three help links in the
+  install guide.
+
 ## 0.1.0-preview reporting setup — 2026-11-04
 
 - Record Apache-2.0 publication direction for Zentari-owned extracted gateway

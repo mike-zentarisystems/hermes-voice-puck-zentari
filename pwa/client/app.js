@@ -1,4 +1,4 @@
-/* Responsive client. Profile and conversation ownership are verified by Citadel. */
+/* Responsive client. Profile and conversation ownership are verified by the gateway. */
 (() => {
   const $ = id => document.getElementById(id);
   const read = (key, fallback) => { try { return localStorage.getItem(key) ?? fallback; } catch { return fallback; } };
