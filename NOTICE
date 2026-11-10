@@ -1,4 +1,4 @@
-Zentari Voice Puck
+Zentari Voice
 Copyright 2026 Zentari Systems
 
 This product is licensed under the Apache License, Version 2.0 (see LICENSE).
@@ -32,9 +32,9 @@ from the Waveshare ESP32-S3-Touch-LCD-1.85C repository:
   Copy:       third_party/waveshare/LICENSE (byte-identical to upstream)
 
 Derived files:
-  components/zv_display/src/zv_st77916_init_cmds.c
-    - ST77916 vendor initialization command table taken from
-      ESP-IDF/ESP32-S3-Touch-LCD-1.85C-Test/main/LCD_Driver/ST77916.c
+  components/zv_board/src/zv_board.c
+    - ST77916 initialization table LCD_INIT, copied from vendor_specific_init_new[]
+      in ESP-IDF/ESP32-S3-Touch-LCD-1.85C-Test/main/LCD_Driver/ST77916.c
   components/zv_board/include/zv_board_pins.h and hardware/pinmap.json
     - GPIO numbers, I2C addresses, and timing values; each value cites its
       upstream file in hardware/pinmap.json
@@ -50,8 +50,8 @@ ESP-IDF (Espressif Systems), LVGL, espressif/esp_lcd_st77916,
 espressif/esp_lcd_touch_cst816s, espressif/esp_codec_dev, espressif/esp-sr,
 espressif/esp_websocket_client. Each is governed by the license shipped with
 that component; review those licenses (including any model-usage terms in
-esp-sr) before distributing firmware binaries. Release checklist item
-LEGAL-01 in docs/ROADMAP.md tracks this review.
+esp-sr) before distributing firmware binaries. The OSS-03 gate in
+docs/RELEASE-STATUS.md tracks this review.
 
 Vendored third-party source
 ---------------------------

@@ -22,11 +22,11 @@ by `tools/build_site.py`; the demo is a separate static site, not this PWA.
 - **Chrome on desktop:** use the address-bar install action when offered, then
   follow the browser's prompts ([Chrome help](https://support.google.com/chrome/answer/9658361)).
 - **Chrome on Android:** open the browser menu and choose **Add to Home screen**
-  / **Install** when available ([Android help](https://support.google.com/chromebook/answer/9658361?co=GENIE.Platform%3DAndroid&hl=en)).
+  / **Install** when available ([Android help](https://support.google.com/chrome/answer/9658361?co=GENIE.Platform%3DAndroid)).
 - **Safari on iPhone:** open the Share menu, choose **Add to Home Screen**, and
-  enable **Open as Web App** if offered ([Apple help](https://support.apple.com/en-az/guide/iphone/iphea86e5236/26/ios/26)).
+  enable **Open as Web App** if offered ([Apple help](https://support.apple.com/guide/iphone/iphea86e5236/ios)).
 - **Safari on supported macOS versions:** choose **File → Add to Dock**
-  ([Apple help](https://support.apple.com/en-ie/104996)).
+  ([Apple help](https://support.apple.com/104996)).
 - **Other browsers:** use their install/app menu if supported, or keep using the
   client in a tab. Installation controls and microphone support vary by browser
   and OS; the presence of an icon is not proof of tested voice support.
@@ -117,7 +117,7 @@ that path. Inspect Docker logs privately; share only sanitized fixed error categ
 | Sign-in fails | Password, exact origin, expiry, cookie storage; wait for login rate limit to clear |
 | Browser TLS warning | Trust the correct local certificate after fingerprint verification; do not bypass |
 | Text works but speech fails | Piper files and format, dependency compatibility, model resource limits |
-| Backend unavailable | Exact `/v1` endpoint/model, restricted host reachability, optional key permissions |
+| Backend unavailable | Exact `/v1` endpoint/model; Ollama listening on Docker's bridge address, not only `127.0.0.1` (see the README quick start); optional key permissions |
 | Microphone unavailable | Trusted HTTPS, OS/browser permission, selected input device |
 | Unexpected recording | Mute input and exit hands-free; report sanitized reproduction |
 

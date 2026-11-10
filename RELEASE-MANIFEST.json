@@ -24,8 +24,8 @@
     },
     {
       "path": ".github/ISSUE_TEMPLATE/config.yml",
-      "bytes": 558,
-      "sha256": "3f8425f5306dd2dd4a8b5c2a44de51fb38f73d4c99f6a92936a9fe6a763608a8"
+      "bytes": 552,
+      "sha256": "87daee4fa7a9b16f3125d34fe00539f1c8319a5b066855c88d66f59f740ebdb2"
     },
     {
       "path": ".github/VULNERABILITY_REPORT.yml",
@@ -64,8 +64,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 2733,
-      "sha256": "781a8ac487a629889e9c84276571e2c868e90587cd50e8f49b31388b49dea98b"
+      "bytes": 3480,
+      "sha256": "08a4a226920a6839d6d0955aa03a1e99b3109b4282c4439b7a60bebe161be344"
     },
     {
       "path": "CMakeLists.txt",
@@ -74,8 +74,8 @@
     },
     {
       "path": "CODE_OF_CONDUCT.md",
-      "bytes": 960,
-      "sha256": "5e5bc11c7bec6a1a69d52b5cd53a8192c5ac40987011d204575720d1bd7785ef"
+      "bytes": 956,
+      "sha256": "278666ba8589168f6eba58b408e5fb917f822097c8673eb91b0f43c15835add5"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -99,13 +99,13 @@
     },
     {
       "path": "NOTICE",
-      "bytes": 3412,
-      "sha256": "724ea2cb1ef239900baeee2e924ea390c509aa9ee031a409f1d81a8c22395f09"
+      "bytes": 3410,
+      "sha256": "e9a92f6c7147169657edf4cdc702eaa1915817ce1ffe8b542f72e8452f644863"
     },
     {
       "path": "README.md",
-      "bytes": 11486,
-      "sha256": "8858939c91c625206543bcb90972ae1a51da0c547edc94405732d0dd7dca6635"
+      "bytes": 9795,
+      "sha256": "3ab27808046995df84a0497084bb3ecd3827dc9c853a90f6fe0a48e3e3c22267"
     },
     {
       "path": "SBOM.cdx.json",
@@ -114,8 +114,8 @@
     },
     {
       "path": "SECURITY.md",
-      "bytes": 2157,
-      "sha256": "115207028cd0377f45923c3382a3ccaac4edf84b4aa0b0e69fb35125c1a31c3e"
+      "bytes": 2153,
+      "sha256": "c2def1ec48838a9b6afab80bc13cf7093a664159e084f9f79c1847ebe6f1003b"
     },
     {
       "path": "SUPPORT.md",
@@ -510,7 +510,7 @@
     {
       "path": "components/zv_platform/src/zv_platform.c",
       "bytes": 15087,
-      "sha256": "cc2c6754c122410ecc2f0a7406b1cc92dcace6219bab99f779f808bdb5a9a763"
+      "sha256": "d601d15ce67e317cee9bb802036c1563a0fe0826c490f5a256f4aa258cd1910f"
     },
     {
       "path": "components/zv_power/CMakeLists.txt",
@@ -604,8 +604,8 @@
     },
     {
       "path": "docs/INSTALL.md",
-      "bytes": 8390,
-      "sha256": "ddf101b6646a9ff85c1c193a3e21e6512f9c4d3f08206a91bfefd38139bc58d8"
+      "bytes": 8428,
+      "sha256": "b7bbffaecae610ed5f538112780b2e26bc0be98e01ebdf0953d7f7771d7b39dc"
     },
     {
       "path": "docs/LICENSES.md",
@@ -614,8 +614,8 @@
     },
     {
       "path": "docs/MAINTAINER.md",
-      "bytes": 3592,
-      "sha256": "d00e374504dea4de1321fbd96e0bc809745c982d41474649382f5c75ceb57e46"
+      "bytes": 3588,
+      "sha256": "2ba5d4261c0df13189d501ecc6332fa7ebf419f9aea13f999377aef93e131090"
     },
     {
       "path": "docs/PUCK-MATERIALS.md",
@@ -673,6 +673,11 @@
       "sha256": "e164330dd8f6e8ae2e47c74bb90cc710dfa9e7ce8563942a773d65542de44472"
     },
     {
+      "path": "eli10.md",
+      "bytes": 4488,
+      "sha256": "7ba446e3663f98faf6947ee45f4d2d274abf02dbca7e930bf086a166f9b4dec6"
+    },
+    {
       "path": "hardware/pinmap.json",
       "bytes": 17720,
       "sha256": "a5ca998c78cbb3c3bcf051a314c52169b2fb397ac50cfdb21e86985c563efc78"
@@ -685,7 +690,7 @@
     {
       "path": "main/Kconfig.projbuild",
       "bytes": 23037,
-      "sha256": "3648204c10cf68a353a5203c7318d6876c8b7d0bf0ca67f9d3b30afce2963d89"
+      "sha256": "edc4f2fa3ddcd51a387f9f7c19ffb50423af9dffbdd2c527baef5eb46b62e0f1"
     },
     {
       "path": "main/main.c",
@@ -829,8 +834,8 @@
     },
     {
       "path": "pwa/client/app.js",
-      "bytes": 20589,
-      "sha256": "593ec9df5e23879c10a94459766bbd551b112de18a06469f57c3b7bf7d4ac2c5"
+      "bytes": 20593,
+      "sha256": "5e46a6037243f818e034439a5c874037f6a2c955c5c650f9ff17c87cc07e985c"
     },
     {
       "path": "pwa/client/audio.js",
@@ -1044,8 +1049,8 @@
     },
     {
       "path": "scripts/tests/test_voice_turn.py",
-      "bytes": 21584,
-      "sha256": "534c8ede52f0f6b9c5757fcc649ec7c3df2b8597388ae8db367717ed53234eaf"
+      "bytes": 21599,
+      "sha256": "b8304300a38c3c3088270354e1f51bbc749e5e914266c86aa5dac7192d5727ce"
     },
     {
       "path": "sdkconfig.defaults",
@@ -1174,8 +1179,8 @@
     },
     {
       "path": "site/demo.js",
-      "bytes": 2900,
-      "sha256": "cceecc7c491b89e4300a8f8cfd9d62a55db7085e4d0acf779183c5205a39ffcf"
+      "bytes": 2892,
+      "sha256": "6f00b12bb9ccbbf1f5b5b25b65d836b544508ce872937823decfd71c82829e65"
     },
     {
       "path": "site/index.html",
@@ -1249,8 +1254,8 @@
     },
     {
       "path": "tests/host/test_gateway.c",
-      "bytes": 3504,
-      "sha256": "9babece00613bad54f7cb1cfe9bf0c8dc470bfb711746530236d9ac0fdd50b53"
+      "bytes": 3516,
+      "sha256": "d849c3c2004162babc97681017510069f892cbc29cba0d122a0f3e3adf3baf33"
     },
     {
       "path": "tests/host/test_link_acceptance.c",
@@ -1334,8 +1339,8 @@
     },
     {
       "path": "tests/pwa/browser-fixture.cjs",
-      "bytes": 1023,
-      "sha256": "5258f99479a76db4857a4593d6e93190e0336b9b1a11c4fbeda14260af357c77"
+      "bytes": 1015,
+      "sha256": "8907d7467fbe5e37119bf72d4c0fc1227309c1212f9a0fceabe7afc70dec87fe"
     },
     {
       "path": "tests/pwa/browser.e2e.cjs",
@@ -1344,8 +1349,8 @@
     },
     {
       "path": "tests/pwa/browser_fixture.py",
-      "bytes": 10096,
-      "sha256": "f7fddb94b412436bed63f73c71c894295a39759f3ec1d3dff89fba854e6e603b"
+      "bytes": 10078,
+      "sha256": "dd8668c517ad835138f7cf11a78e82401692348e1be633acb1851fbfd6191dd4"
     },
     {
       "path": "tests/pwa/client.test.cjs",
@@ -1484,8 +1489,8 @@
     },
     {
       "path": "tools/setup.py",
-      "bytes": 6497,
-      "sha256": "2cf895bdabcca5ecb167e34f75d326ad76c8cb994a1be04192d885bbc474fa7c"
+      "bytes": 7028,
+      "sha256": "c0337bbd179db339858d09e054081b20b8866643758fb798ac05888fc64ae120"
     },
     {
       "path": "tools/ui_preview.c",
