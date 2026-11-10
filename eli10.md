@@ -1,11 +1,11 @@
-# Zentari Voice, explained simply
+# Hermes Voice Agent, explained simply
 
 This page explains the project in plain words, as if to a curious 10-year-old.
 For the full details, read the [README](README.md).
 
 ## What is it?
 
-Zentari Voice is a talking helper you run on your own computer.
+Hermes Voice Agent is a talking helper you run on your own computer.
 
 You can talk to it, or type to it, and it talks back. You can use it in two ways:
 

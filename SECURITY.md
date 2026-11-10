@@ -15,7 +15,7 @@ public issue is not a private reporting channel.
 
 Include the source revision, affected component, impact and safe reproduction
 steps. Omit live credentials, raw audio, personal transcripts and private device
-dumps. Use the subject **Zentari Voice security report** for email.
+dumps. Use the subject **Hermes Voice Agent security report** for email.
 
 If the GitHub form is unavailable, use the email contact. No guaranteed response
 time is promised. Channel configuration and notification delivery are separate

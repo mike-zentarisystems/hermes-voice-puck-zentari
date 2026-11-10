@@ -1,4 +1,4 @@
-# Zentari Voice
+# Hermes Voice Agent
 
 **A private voice helper you run yourself, in your browser or on a small round puck.**
 
@@ -22,7 +22,8 @@ New here? Read the [plain-English overview (eli10.md)](eli10.md) first.
 
 ## Names used in this project
 
-- **Zentari Voice** is the project and the browser app.
+- **Hermes Voice Agent** is the project, built by Zentari Systems. The browser
+  app and the overview image still show its earlier name, Zentari Voice.
 - **The puck** is the optional round touch-screen device.
 - **Zenti** and **Orbit** are the two on-screen characters you can choose.
 - **Hermes** is the [Nous Research agent](https://github.com/NousResearch/hermes-agent)

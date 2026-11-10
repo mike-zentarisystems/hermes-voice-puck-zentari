@@ -24,8 +24,8 @@
     },
     {
       "path": ".github/ISSUE_TEMPLATE/config.yml",
-      "bytes": 552,
-      "sha256": "87daee4fa7a9b16f3125d34fe00539f1c8319a5b066855c88d66f59f740ebdb2"
+      "bytes": 559,
+      "sha256": "9cb95459a36ce8b7fb85e49398fa563edcc9462da9f8ade1e1bd6bbd3ace3211"
     },
     {
       "path": ".github/VULNERABILITY_REPORT.yml",
@@ -64,8 +64,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 3480,
-      "sha256": "08a4a226920a6839d6d0955aa03a1e99b3109b4282c4439b7a60bebe161be344"
+      "bytes": 3485,
+      "sha256": "4f416b0d25ebe50fc1dbf33a97ce2b116b73e9f3d0898ccb473f2bda9b6e1065"
     },
     {
       "path": "CMakeLists.txt",
@@ -74,8 +74,8 @@
     },
     {
       "path": "CODE_OF_CONDUCT.md",
-      "bytes": 956,
-      "sha256": "278666ba8589168f6eba58b408e5fb917f822097c8673eb91b0f43c15835add5"
+      "bytes": 961,
+      "sha256": "fb4045110d59ff7a0f0e96c52ca9e6d3398bd69c4a417f1511ee302d2496810a"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -99,13 +99,13 @@
     },
     {
       "path": "NOTICE",
-      "bytes": 3410,
-      "sha256": "e9a92f6c7147169657edf4cdc702eaa1915817ce1ffe8b542f72e8452f644863"
+      "bytes": 3415,
+      "sha256": "e4cbeb41d9ebb9515c17a8fde948a3549f8d0ac30fd483e93d7704b29d37fce2"
     },
     {
       "path": "README.md",
-      "bytes": 9795,
-      "sha256": "3ab27808046995df84a0497084bb3ecd3827dc9c853a90f6fe0a48e3e3c22267"
+      "bytes": 9896,
+      "sha256": "f81a8d3a891aab3dcc746e0900c4af8bbc59a7f8080a4aa265d465ab8cfe89a4"
     },
     {
       "path": "SBOM.cdx.json",
@@ -114,8 +114,8 @@
     },
     {
       "path": "SECURITY.md",
-      "bytes": 2153,
-      "sha256": "c2def1ec48838a9b6afab80bc13cf7093a664159e084f9f79c1847ebe6f1003b"
+      "bytes": 2158,
+      "sha256": "aa5988008d024e18155f2f41b670cc62787ef911f2c830d9525d843a69487bbe"
     },
     {
       "path": "SUPPORT.md",
@@ -614,8 +614,8 @@
     },
     {
       "path": "docs/MAINTAINER.md",
-      "bytes": 3588,
-      "sha256": "2ba5d4261c0df13189d501ecc6332fa7ebf419f9aea13f999377aef93e131090"
+      "bytes": 3593,
+      "sha256": "f27e2c5ed9a55bc859980ce8f16ed0f93f925269d53a8c57efaccc993fac8a16"
     },
     {
       "path": "docs/PUCK-MATERIALS.md",
@@ -674,8 +674,8 @@
     },
     {
       "path": "eli10.md",
-      "bytes": 4488,
-      "sha256": "7ba446e3663f98faf6947ee45f4d2d274abf02dbca7e930bf086a166f9b4dec6"
+      "bytes": 4498,
+      "sha256": "1d4cd7ce30d3be94f9e69f92e8d29418386d464e4340bd139525a05cc488341a"
     },
     {
       "path": "hardware/pinmap.json",
