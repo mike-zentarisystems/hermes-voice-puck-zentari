@@ -64,8 +64,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 3485,
-      "sha256": "4f416b0d25ebe50fc1dbf33a97ce2b116b73e9f3d0898ccb473f2bda9b6e1065"
+      "bytes": 3551,
+      "sha256": "97f5d7687508a6d0d2cb691ee5c2a64ed829350cd9342dc201d6184db7f3b2fa"
     },
     {
       "path": "CMakeLists.txt",
@@ -104,8 +104,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 9896,
-      "sha256": "f81a8d3a891aab3dcc746e0900c4af8bbc59a7f8080a4aa265d465ab8cfe89a4"
+      "bytes": 9878,
+      "sha256": "80b15737167cd5af0dd4e27d2ba2a200fdf61734fd75b68d372910a6e799c85e"
     },
     {
       "path": "SBOM.cdx.json",
@@ -654,8 +654,8 @@
     },
     {
       "path": "docs/media/system-overview.svg",
-      "bytes": 3175,
-      "sha256": "435802b2efe761eeaff312e9a8a4389f4fe71b58f22049982a0d4eb791af7108"
+      "bytes": 3180,
+      "sha256": "1ba395b15d9cde5d31180fb3bb461ffd72076236be3e9e6f368ad3ff04c30fa9"
     },
     {
       "path": "docs/media/video/puck-demo-2026-11-07.mp4",
@@ -664,13 +664,13 @@
     },
     {
       "path": "docs/media/zentari-voice-overview.png",
-      "bytes": 208422,
-      "sha256": "3b07b472d7049203fdd8b6e2871b4ac4e76566203b99035f2856ab4d4055f2f8"
+      "bytes": 211759,
+      "sha256": "9cd00d4cb6fdc32d9b6f85abf7d13635477b69124ef5a55b2a975e3c8b8ea161"
     },
     {
       "path": "docs/media/zentari-voice-overview.svg",
-      "bytes": 142341,
-      "sha256": "e164330dd8f6e8ae2e47c74bb90cc710dfa9e7ce8563942a773d65542de44472"
+      "bytes": 142351,
+      "sha256": "14e7af3123d5823bb77ff957d79224c054a2149b6f005cd8d39faa9c783cc8d3"
     },
     {
       "path": "eli10.md",
@@ -959,13 +959,13 @@
     },
     {
       "path": "pwa/client/index.html",
-      "bytes": 4312,
-      "sha256": "d0cdebe7616c0e6b60388c672e9090a1bda4054a399d5685cb14462464895968"
+      "bytes": 4327,
+      "sha256": "89cd5dd8f43a375e6307d83209a1bae50c8217e7e6e9f9e7fab79fa2f3bd6b38"
     },
     {
       "path": "pwa/client/manifest.json",
-      "bytes": 399,
-      "sha256": "8b4422383bf313fd55f6c4cc6da3a9ad05f3b71ac18805581595b5f8e8451023"
+      "bytes": 410,
+      "sha256": "4adfb93ad343fc6621284a620ba641cf37bc01e217c74b7bd97a7bf2cece67ba"
     },
     {
       "path": "pwa/client/message.js",

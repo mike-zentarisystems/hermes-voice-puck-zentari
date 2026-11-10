@@ -14,7 +14,7 @@ New here? Read the [plain-English overview (eli10.md)](eli10.md) first.
 [Puck parts](docs/PUCK-MATERIALS.md) ·
 [How it works](docs/ARCHITECTURE.md)
 
-![Zentari Voice browser PWA and experimental ESP32-S3 puck, with the official Nous Research Hermes logo. Direct Hermes integration is planned.](docs/media/zentari-voice-overview.png)
+![Hermes Voice Agent browser PWA and experimental ESP32-S3 puck, with the official Nous Research Hermes logo. Direct Hermes integration is planned.](docs/media/zentari-voice-overview.png)
 
 > **Experimental preview.** The browser app works. The puck firmware is an
 > experiment. Connecting to the [Hermes agent](docs/HERMES-INTEGRATION.md) is
@@ -22,8 +22,8 @@ New here? Read the [plain-English overview (eli10.md)](eli10.md) first.
 
 ## Names used in this project
 
-- **Hermes Voice Agent** is the project, built by Zentari Systems. The browser
-  app and the overview image still show its earlier name, Zentari Voice.
+- **Hermes Voice Agent** is the project and the browser app, built by Zentari Systems.
+  It was previously called Zentari Voice.
 - **The puck** is the optional round touch-screen device.
 - **Zenti** and **Orbit** are the two on-screen characters you can choose.
 - **Hermes** is the [Nous Research agent](https://github.com/NousResearch/hermes-agent)

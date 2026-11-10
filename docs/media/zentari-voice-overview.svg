@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="hero-title hero-desc">
-<title id="hero-title">Zentari Voice: browser PWA and experimental puck</title>
+<title id="hero-title">Hermes Voice Agent: browser PWA and experimental puck</title>
 <desc id="hero-desc">Independent Zentari project. Official Nous Research Hermes logo used with attribution. Direct Hermes integration is planned; the current standalone backend is OpenAI-compatible chat.</desc>
 <metadata>MIT License
 
@@ -28,7 +28,7 @@ SOFTWARE.
 <path d="M66 123H930" stroke="#dc99bf" stroke-width="3"/>
 <g font-family="DejaVu Sans,Arial,sans-serif" fill="#f5f7ff">
 <text x="66" y="84" font-size="23" letter-spacing="4" fill="#e4a8c9">ZENTARI SYSTEMS / INDEPENDENT PROJECT</text>
-<text x="66" y="245" font-size="81" font-weight="700">Zentari Voice</text>
+<text x="66" y="245" font-size="70" font-weight="700">Hermes Voice Agent</text>
 <text x="66" y="330" font-size="40">Browser PWA.</text>
 <text x="66" y="387" font-size="40">Experimental ESP32-S3 puck.</text>
 <text x="66" y="485" font-size="29" fill="#bcccdf">Text and voice. Your own gateway.</text>

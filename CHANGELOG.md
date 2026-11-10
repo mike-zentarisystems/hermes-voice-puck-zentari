@@ -9,7 +9,8 @@
   example speech-model downloads.
 - `tools/setup.py` now prints the reason when setup fails and removes a
   half-created configuration directory, so setup can be run again.
-- Use "Hermes Voice Agent" consistently in docs and report subjects; replace private
+- Rename the project to Hermes Voice Agent in docs, report subjects, the
+  browser app title and install name, and the overview image; replace private
   infrastructure names in comments, tests and the demo with neutral wording.
 - Fix two missing-file references in NOTICE and three help links in the
   install guide.
