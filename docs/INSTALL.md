@@ -55,7 +55,9 @@ loopback quick start does not constitute an internet hosting configuration.
 
 ## Model integrity
 
-No model weight, voice, font, or third-party portrait is distributed. Select a
+No model weights or voice-model files are distributed. The repository includes
+separately attributed presentation artwork and owner-supplied footage; see the
+[media inventory](media/README.md) and [license notices](LICENSES.md). Select a
 model with a license allowing your intended use. Retain its model card, immutable
 upstream revision, source URL, license, and expected SHA-256 hashes obtained from
 a trusted upstream channel. Verify the downloaded bytes against those hashes

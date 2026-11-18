@@ -2,6 +2,7 @@
 import json
 from pathlib import Path
 import sys
+import subprocess
 import tempfile
 import unittest
 import zipfile
@@ -17,6 +18,66 @@ class PackagingTests(unittest.TestCase):
         errors, entries = check(root)
         self.assertEqual(errors, [])
         (root / 'RELEASE-MANIFEST.json').write_text(json.dumps(manifest(root, entries)), encoding='utf-8')
+
+    def release_check(self, root):
+        return subprocess.run(
+            [sys.executable, '-B', str(ROOT / 'tools/check_release.py'),
+             '--root', str(root), '--verify-manifest'],
+            capture_output=True, text=True, check=False,
+        )
+
+    def test_release_check_cli_accepts_exact_manifest_without_rewriting(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp); (root / 'README.md').write_text('Reviewed source\n')
+            self.record(root)
+            recorded = (root / 'RELEASE-MANIFEST.json').read_bytes()
+            result = self.release_check(root)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertIn('PASS:', result.stdout)
+            self.assertEqual((root / 'RELEASE-MANIFEST.json').read_bytes(), recorded)
+
+    def test_release_check_cli_rejects_manifest_drift_without_rewriting(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp); source = root / 'README.md'
+            source.write_text('Reviewed source\n'); self.record(root)
+            recorded = (root / 'RELEASE-MANIFEST.json').read_bytes()
+            source.write_text('Changed after the manifest was recorded\n')
+            result = self.release_check(root)
+            self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+            self.assertIn('manifest drift', result.stdout)
+            self.assertEqual((root / 'RELEASE-MANIFEST.json').read_bytes(), recorded)
+
+    def test_release_check_cli_rejects_missing_or_invalid_manifest(self):
+        for content in (None, 'not-json', '{}'):
+            with self.subTest(content=content), tempfile.TemporaryDirectory() as temp:
+                root = Path(temp); (root / 'README.md').write_text('Reviewed source\n')
+                if content is not None:
+                    (root / 'RELEASE-MANIFEST.json').write_text(content)
+                result = self.release_check(root)
+                self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+                self.assertIn('manifest', result.stdout)
+
+    def test_release_check_cli_rejects_added_or_removed_files(self):
+        for change in ('added', 'removed'):
+            with self.subTest(change=change), tempfile.TemporaryDirectory() as temp:
+                root = Path(temp)
+                source = root / 'README.md'
+                source.write_text('Reviewed source\n')
+                self.record(root)
+                recorded = (root / 'RELEASE-MANIFEST.json').read_bytes()
+                if change == 'added':
+                    (root / 'unreviewed.py').write_text('print("new source")\n')
+                else:
+                    source.unlink()
+                result = self.release_check(root)
+                self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+                self.assertIn('manifest drift', result.stdout)
+                self.assertEqual((root / 'RELEASE-MANIFEST.json').read_bytes(), recorded)
+
+    def test_validation_workflow_verifies_instead_of_rewriting_manifest(self):
+        workflow = (ROOT / '.github/workflows/validate.yml').read_text(encoding='utf-8')
+        self.assertIn('python tools/check_release.py --verify-manifest', workflow)
+        self.assertNotIn('--write-manifest', workflow)
 
     def test_deterministic_archive_excludes_runtime_and_git(self):
         with tempfile.TemporaryDirectory() as temp:

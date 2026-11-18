@@ -1,19 +1,57 @@
-# Public preview status — 2026-11-04
+# Public preview status — 2026-11-08
 
 **Experimental source/web preview prepared. Stable product release remains open.**
 The acceptance below applies to this new export, not an older installed puck.
-Private source history, infrastructure records, credentials, reference portraits
-and model weights are excluded. Actual publication and channel status are
-verified separately from this document.
+Private source history, infrastructure records, credentials and model weights
+are excluded. The approved presentation media is identified below; the older
+colored portrait is visible only in the owner-supplied footage and its extracted
+frame, not distributed as a standalone avatar asset. Actual publication and
+channel status are verified separately from this document.
+
+## Current published software evidence — 2026-11-08
+
+The public repository's main revision
+[`812adbb59d1320af0bd8bb637e0fe0a4e9efd555`](https://github.com/mike-zentarisystems/hermes-voice-puck-zentari/commit/812adbb59d1320af0bd8bb637e0fe0a4e9efd555)
+passed hosted [validation run 42444887109](https://github.com/mike-zentarisystems/hermes-voice-puck-zentari/actions/runs/42444887109).
+This evidence applies to that exact revision, not automatically to later changes.
+The run used Ubuntu 24.04, CPython 3.13 and Node 24, and completed:
+
+- Source scan: 298 files scanned and fingerprinted.
+- Python: 76 gateway/script tests and 46 public/runtime tests.
+- Browser unit tests: 47 passed, including unavailable/interrupted audio recovery.
+- Portable firmware core: 22 native host suites passed; no device was flashed.
+- Chromium: full PWA, scripted demo and automated accessibility tests passed.
+- Firefox: full PWA and scripted demo passed with synthetic microphone/model
+  fixtures and a virtual PulseAudio sink.
+- WebKit: scripted static demo passed; full microphone/voice behavior is untested.
+- Container: the Docker image built and `docker compose config --quiet` passed.
+  This step did **not** start the Compose service or run a real model in it.
+
+The [presentation update](https://github.com/mike-zentarisystems/hermes-voice-puck-zentari/pull/1)
+and [audio-recovery fix](https://github.com/mike-zentarisystems/hermes-voice-puck-zentari/pull/2)
+are merged. The [media inventory](media/README.md) records the exact official
+Hermes logo with its MIT notice, independent-project graphics, and the approved
+owner-recorded physical puck video with unchanged audio and a real frame.
+That footage does not identify the installed firmware/backend revision and is
+not acceptance of this public source. Direct Hermes integration, cross-device
+handoff and visible agent-action approval remain [planned](HERMES-INTEGRATION.md).
+
+Before promoting this source preview, the next software acceptance is a dedicated
+clean-machine installation that starts the reviewed container and exercises
+real STT/chat/TTS, login/logout, reset, cancellation/recovery and rollback. Record
+its exact source/image/model revisions and sanitized evidence. The historical
+real-model result below does not validate this newer revision. Physical phone
+microphone, puck, battery/charging and elapsed-soak gates remain separate.
 
 ## Owner-directed publication setup — 2026-11-04
 
 The owner selected [hermes-voice-puck-zentari](https://github.com/mike-zentarisystems/hermes-voice-puck-zentari),
 directed Apache-2.0 publication of Zentari-owned source including the extracted
 gateway, and designated **info@zentarisystems.io** as the monitored private
-security/conduct contact. Vendor/dependency licenses remain separate. Distribution
-is limited to source and the scripted static demo; no firmware/container binary,
-model weight or reference portrait is included.
+security/conduct contact. Vendor/dependency licenses remain separate. That initial
+distribution was limited to source and the scripted static demo; the later approved
+media additions are recorded above. No firmware/container binary, model weight or
+standalone reference portrait asset is included.
 
 The private vulnerability form and issue-routing configuration are supplied.
 GitHub's reporting feature is activated and checked separately when the new
@@ -50,7 +88,7 @@ security or legal approval. This historical result does not establish hardware,
 unfamiliar-machine/operator, reporting-receipt or third-party binary acceptance.
 Current owner source-license and contact decisions are recorded above.
 
-## Executed software evidence
+## Executed software evidence (historical checks plus November 8 hosted run)
 
 | Check | Evidence tier and result |
 | --- | --- |
@@ -59,16 +97,17 @@ Current owner source-license and contact decisions are recorded above.
 | Dependencies | Linux CPython 3.13 amd64: 34 exact wheel hashes resolved; pinned image builds; pip-audit reports no known Python dependency vulnerabilities |
 | Portable firmware core | Native GCC: 22/22 suites pass, including regenerated public RGB565/RLE artwork |
 | Gateway | Linux: 76 tests pass, including protocol rejection, context/reset/isolation, cancellation and subprocess lifecycle |
-| Browser unit coverage | Native Node: 42 tests pass, including auth, late audio, permission races, bounded queues and cache failure |
+| Browser unit coverage | November 8 hosted Node: 47 tests pass, including auth, late audio, permission races, bounded queues, cache failure and unavailable/interrupted audio recovery |
 | Accessibility | Automated axe WCAG 2/2.1/2.2 A/AA checks pass for phone/desktop PWA states, sign-in dialog and the static demo; actual assistive-technology review remains open |
 | Full PWA | Synthetic Chromium and Firefox: sign-in, text/context, cancellation, microphone fixtures, reconnect, reduced motion, avatar persistence, offline shell, logout and 320px layouts pass |
 | Static demo | Synthetic Chromium, Firefox and WebKit: scripted interaction, cancellation/reset, keyboard, narrow layouts and no external requests/storage pass |
 | Standalone setup/TLS | Linux integration: fresh private setup, verified real HTTPS/WSS, cookie login, local HTTP chat fixture, bounded PCM output and logout pass; inference is synthetic |
 | Firmware builds | ESP-IDF 6.1: default and M3a voice-mode builds pass with the procedural public assets; no flash or physical acceptance |
-| Compose | Static: configuration parses; host ports are loopback-only, non-root UID, read-only mounts/root, capabilities dropped and resource limits |
+| Compose/container | November 8 hosted run: Compose configuration parses and Docker image builds; service startup and real-model execution were not part of this run. Configuration retains loopback-only ports, non-root UID, read-only mounts/root, dropped capabilities and resource limits |
 
-No hosted GitHub CI, phone microphone, screen reader, new physical firmware,
-hardware charging, signed update, firmware rollback or soak pass is implied.
+Hosted GitHub CI at the revision above does not imply phone microphone, screen
+reader, new physical firmware, hardware charging, signed update, firmware rollback
+or soak acceptance.
 Python vulnerability results exclude OS/firmware/model analysis. SBOM inventory
 and checksums do not constitute legal clearance, artifact signatures or an
 independent security audit. Workflow and packaging tools require final-tree checks.
@@ -80,7 +119,7 @@ independent security audit. Workflow and packaging tools require final-tree chec
 | OSS-01 baseline | Prior voice phase accepted; new public art/core tested | Exact new public firmware/web/model/board physical acceptance |
 | OSS-02 product/brand | Owner selected the preview repository/name; local-first browser/reference boundary documented | Stable product/brand and trademark review |
 | OSS-03 code/vendor rights | Owner directed Apache-2.0 for Zentari-owned gateway; root/vendor notices and package inventory retained | Third-party dependency/binary obligations and independent rights review |
-| OSS-04 artwork/models | Unclear artwork and weights omitted; original geometric art generated | Confirm final distribution inventory contains only cleared assets |
+| OSS-04 artwork/models | Procedural client art retained; exact official Hermes logo has pinned MIT provenance; owner-approved video/frame inventoried; model weights omitted | Review rights and notices for the exact final distribution; do not infer rights to other portrait files |
 | OSS-05 standalone gateway | Extracted gateway plus local OpenAI-compatible adapter; real TLS fixture round trip | Independent replication of real local STT/chat/TTS acceptance |
 | OSS-06 clean export | Explicit source/overlay allowlist; private provenance outside export; scans | Independent exact final tree and new-history review |
 | OSS-07 protocol | Existing schemas/vectors, limits, compatible-client and negative tests retained | Final published compatibility review |
@@ -97,7 +136,7 @@ independent security audit. Workflow and packaging tools require final-tree chec
 | OSS-18 OTA recovery | Source/policy tests retained; default mode disabled | Wrong/corrupt/untrusted/interrupted image, failed-boot rollback and attended recovery |
 | OSS-19 soak | Required procedure documented | Frozen candidate 24-hour then 72-hour physical soak |
 | OSS-20 community/docs | Install, architecture, support, conduct, contribution and maintainer docs written | Two unfamiliar reviewers and tested real contact channels |
-| OSS-21 release automation | Action/image digest pins, wheel hashes, SBOM, read-only CI and manual Pages workflow | Hosted clean run, firmware matrix and OS/license/scanner coverage |
+| OSS-21 release automation | Action/image digest pins, wheel hashes, SBOM and read-only hosted software CI passed at the revision linked above; Pages workflow is manual | Firmware matrix and OS/license/scanner coverage; rerun required checks for each new candidate |
 | OSS-22 artifacts/recovery | Exact source manifest and deterministic packaging tooling | Second-builder/signature review and independent install/rollback replication |
 | OSS-23 beta | Explicit experimental scope and known limitations | Consented external browser/hardware beta and blocker closure |
 | OSS-24 public authorization | Owner selected the new repository and directed experimental Apache-2.0 source/demo publication | Stable release needs its own final manifest, acceptance and authorization |
