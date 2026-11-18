@@ -198,6 +198,7 @@ zv_status_t zv_ota_slot_begin(zv_ota_slot_t *slot, uint32_t expected_size)
     slot->next_sequence = 0u;
     slot->last_activity_ms = 0u;
     slot->probation_started_ms = 0u;
+    slot->probation_started = false;
     return ZV_OK;
 }
 
@@ -284,6 +285,7 @@ zv_status_t zv_ota_slot_begin_probation(zv_ota_slot_t *slot, uint32_t now_ms)
     if (slot->state != ZV_OTA_SLOT_AWAITING_CONFIRM) {
         return ZV_ERR_INVALID_STATE;
     }
+    slot->probation_started = true;
     slot->probation_started_ms = now_ms;
     slot->last_activity_ms = now_ms;
     return ZV_OK;
@@ -297,7 +299,7 @@ bool zv_ota_slot_probation_expired(const zv_ota_slot_t *slot, uint32_t now_ms,
     }
     /* Only an image that entered probation can expire. A confirmed slot has
      * already proved itself and a failed one is already decided. */
-    if (slot->state != ZV_OTA_SLOT_AWAITING_CONFIRM) {
+    if (slot->state != ZV_OTA_SLOT_AWAITING_CONFIRM || !slot->probation_started) {
         return false;
     }
     /* Subtraction rather than addition so the bound cannot wrap. */

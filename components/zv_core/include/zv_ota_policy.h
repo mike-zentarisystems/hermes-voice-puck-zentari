@@ -111,6 +111,7 @@ typedef struct {
     uint32_t probation_started_ms; /**< when the new image entered probation */
     uint32_t last_activity_ms;     /**< last accepted write, for stall detection */
     uint16_t next_sequence;        /**< next expected transfer sequence number */
+    bool probation_started;       /**< explicit entry; timestamp zero is valid */
     bool sequence_started;         /**< a sequenced transfer has begun */
 } zv_ota_slot_t;
 

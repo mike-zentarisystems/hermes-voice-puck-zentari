@@ -427,6 +427,40 @@ static void test_slot_sequence_retry_resets_bookkeeping(void)
     ZV_CHECK_EQ(slot.probation_started_ms, 151000u);
 }
 
+
+/* A zero timestamp is a valid start, not an unstarted sentinel. */
+static void test_slot_probation_entry_and_zero_timestamp(void)
+{
+    uint8_t digest[32];
+    fill_digest(digest, 6u);
+    zv_ota_slot_t slot;
+    zv_ota_slot_init(&slot);
+    ZV_CHECK_EQ(drive_to_awaiting(&slot, digest), ZV_OK);
+    ZV_CHECK(!zv_ota_slot_probation_expired(&slot, 999999u, 300000u));
+    ZV_CHECK_EQ(zv_ota_slot_begin_probation(&slot, 0u), ZV_OK);
+    ZV_CHECK(!zv_ota_slot_probation_expired(&slot, 299999u, 300000u));
+    ZV_CHECK(zv_ota_slot_probation_expired(&slot, 300000u, 300000u));
+    ZV_CHECK(!zv_ota_slot_probation_expired(&slot, 300000u, 0u));
+    ZV_CHECK_EQ(zv_ota_slot_boot_ok(&slot), ZV_OK);
+    ZV_CHECK(!zv_ota_slot_probation_expired(&slot, 999999u, 300000u));
+
+    /* Reset and retry clear the entry flag; wraparound preserves the window. */
+    zv_ota_slot_init(&slot);
+    ZV_CHECK_EQ(drive_to_awaiting(&slot, digest), ZV_OK);
+    ZV_CHECK(!zv_ota_slot_probation_expired(&slot, 999999u, 300000u));
+    ZV_CHECK_EQ(zv_ota_slot_begin_probation(&slot, UINT32_MAX - 10u), ZV_OK);
+    ZV_CHECK(!zv_ota_slot_probation_expired(&slot, 8u, 20u));
+    ZV_CHECK(zv_ota_slot_probation_expired(&slot, 9u, 20u));
+    ZV_CHECK_EQ(zv_ota_slot_boot_failed(&slot), ZV_OK);
+    ZV_CHECK(!zv_ota_slot_probation_expired(&slot, 10u, 20u));
+
+    zv_ota_slot_init(&slot);
+    ZV_CHECK_EQ(zv_ota_slot_begin(&slot, IMAGE_SIZE), ZV_OK);
+    ZV_CHECK_EQ(zv_ota_slot_finish_download(&slot), ZV_ERR_POLICY);
+    ZV_CHECK_EQ(drive_to_awaiting(&slot, digest), ZV_OK);
+    ZV_CHECK(!zv_ota_slot_probation_expired(&slot, 999999u, 300000u));
+}
+
 void test_suite_ota_slot(void)
 {
     test_digest_equal();
@@ -439,6 +473,7 @@ void test_suite_ota_slot(void)
     test_slot_state_names();
     test_slot_follows_manifest_policy();
     test_slot_probation_window();
+    test_slot_probation_entry_and_zero_timestamp();
     test_slot_probation_requires_confirmation();
     test_slot_sequence_and_stall();
     test_slot_sequence_retry_resets_bookkeeping();
