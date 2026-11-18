@@ -317,6 +317,116 @@ static void test_slot_follows_manifest_policy(void)
     ZV_CHECK_EQ(zv_ota_slot_write(&slot, 1u), ZV_ERR_INVALID_STATE);
 }
 
+/**
+ * The probation window: an image that boots and never proves itself must be
+ * rolled back rather than left pending forever. The bound and the rule come
+ * from the Hermes Gadget SDK, which boots a new image on probation and reverts
+ * when it does not reach its server in time.
+ */
+static void test_slot_probation_window(void)
+{
+    zv_ota_slot_t slot;
+    zv_ota_slot_init(&slot);
+    ZV_CHECK_EQ(zv_ota_slot_begin(&slot, IMAGE_SIZE), ZV_OK);
+    ZV_CHECK_EQ(write_all(&slot, IMAGE_SIZE), ZV_OK);
+    ZV_CHECK_EQ(zv_ota_slot_finish_download(&slot), ZV_OK);
+    ZV_CHECK_EQ(zv_ota_slot_digest_result(&slot, true), ZV_OK);
+
+    ZV_CHECK_EQ(zv_ota_slot_begin_probation(&slot, 1000u), ZV_OK);
+    ZV_CHECK(!zv_ota_slot_probation_expired(&slot, 1000u, ZV_OTA_PROBATION_MS_DEFAULT));
+    ZV_CHECK(!zv_ota_slot_probation_expired(&slot, 1000u + ZV_OTA_PROBATION_MS_DEFAULT - 1u,
+                                            ZV_OTA_PROBATION_MS_DEFAULT));
+    ZV_CHECK(zv_ota_slot_probation_expired(&slot, 1000u + ZV_OTA_PROBATION_MS_DEFAULT,
+                                           ZV_OTA_PROBATION_MS_DEFAULT));
+
+    /* An expired probation is rolled back to the previous image. */
+    ZV_CHECK_EQ(zv_ota_slot_boot_failed(&slot), ZV_OK);
+    ZV_CHECK_EQ(slot.state, ZV_OTA_SLOT_ROLLED_BACK);
+    /* A decided slot cannot expire a second time. */
+    ZV_CHECK(!zv_ota_slot_probation_expired(&slot, 1000u + ZV_OTA_PROBATION_MS_DEFAULT * 2u,
+                                            ZV_OTA_PROBATION_MS_DEFAULT));
+}
+
+/** Only an image that is awaiting confirmation has a probation window. */
+static void test_slot_probation_requires_confirmation(void)
+{
+    zv_ota_slot_t slot;
+    zv_ota_slot_init(&slot);
+    ZV_CHECK_EQ(zv_ota_slot_begin(&slot, IMAGE_SIZE), ZV_OK);
+    ZV_CHECK(!zv_ota_slot_probation_expired(&slot, 999999u, ZV_OTA_PROBATION_MS_DEFAULT));
+    ZV_CHECK_EQ(zv_ota_slot_begin_probation(&slot, 0u), ZV_ERR_INVALID_STATE);
+    ZV_CHECK_EQ(zv_ota_slot_begin_probation(NULL, 0u), ZV_ERR_INVALID_ARG);
+}
+
+/**
+ * Sequenced transfers: a gap abandons the update rather than writing a hole
+ * into the image, and a transfer that stops delivering data is abandoned
+ * instead of leaving the slot pending.
+ */
+static void test_slot_sequence_and_stall(void)
+{
+    zv_ota_slot_t slot;
+    zv_ota_slot_init(&slot);
+    ZV_CHECK_EQ(zv_ota_slot_begin(&slot, IMAGE_SIZE), ZV_OK);
+
+    /* Consecutive sequence numbers are accepted. */
+    ZV_CHECK_EQ(zv_ota_slot_write_seq(&slot, 0u, 100u, 1000u, ZV_OTA_STALL_TIMEOUT_MS_DEFAULT), ZV_OK);
+    ZV_CHECK_EQ(zv_ota_slot_write_seq(&slot, 1u, 100u, 1100u, ZV_OTA_STALL_TIMEOUT_MS_DEFAULT), ZV_OK);
+    ZV_CHECK_EQ(slot.received, 200u);
+
+    /* A gap abandons the update. */
+    ZV_CHECK_EQ(zv_ota_slot_write_seq(&slot, 5u, 100u, 1200u, ZV_OTA_STALL_TIMEOUT_MS_DEFAULT),
+                ZV_ERR_POLICY);
+    ZV_CHECK_EQ(slot.state, ZV_OTA_SLOT_FAILED);
+    ZV_CHECK_EQ(slot.reason, ZV_OTA_REASON_SEQUENCE_GAP);
+    ZV_CHECK_STR(zv_ota_reason_name(slot.reason), "sequence_gap");
+
+    /* A stalled transfer is abandoned as well. */
+    zv_ota_slot_init(&slot);
+    ZV_CHECK_EQ(zv_ota_slot_begin(&slot, IMAGE_SIZE), ZV_OK);
+    ZV_CHECK_EQ(zv_ota_slot_write_seq(&slot, 0u, 100u, 1000u, ZV_OTA_STALL_TIMEOUT_MS_DEFAULT), ZV_OK);
+    ZV_CHECK(!zv_ota_slot_stalled(&slot, 1000u, ZV_OTA_STALL_TIMEOUT_MS_DEFAULT));
+    ZV_CHECK(zv_ota_slot_stalled(&slot, 1000u + ZV_OTA_STALL_TIMEOUT_MS_DEFAULT,
+                                 ZV_OTA_STALL_TIMEOUT_MS_DEFAULT));
+    ZV_CHECK_EQ(zv_ota_slot_write_seq(&slot, 1u, 100u, 1000u + ZV_OTA_STALL_TIMEOUT_MS_DEFAULT,
+                                      ZV_OTA_STALL_TIMEOUT_MS_DEFAULT), ZV_ERR_POLICY);
+    ZV_CHECK_EQ(slot.reason, ZV_OTA_REASON_STALLED);
+    ZV_CHECK_STR(zv_ota_reason_name(slot.reason), "stalled");
+
+    /* A slot that is not downloading cannot stall. */
+    ZV_CHECK(!zv_ota_slot_stalled(&slot, 1000u + ZV_OTA_STALL_TIMEOUT_MS_DEFAULT * 2u,
+                                  ZV_OTA_STALL_TIMEOUT_MS_DEFAULT));
+}
+
+/* Failed transfers can restart on the same slot without a full init. */
+static void test_slot_sequence_retry_resets_bookkeeping(void)
+{
+    zv_ota_slot_t slot;
+    zv_ota_slot_init(&slot);
+    ZV_CHECK_EQ(zv_ota_slot_begin(&slot, 200u), ZV_OK);
+    ZV_CHECK_EQ(zv_ota_slot_write_seq(&slot, 0u, 100u, 1000u, 30000u), ZV_OK);
+    ZV_CHECK_EQ(zv_ota_slot_write_seq(&slot, 2u, 100u, 1100u, 30000u), ZV_ERR_POLICY);
+    ZV_CHECK_EQ(slot.reason, ZV_OTA_REASON_SEQUENCE_GAP);
+
+    ZV_CHECK_EQ(zv_ota_slot_begin(&slot, 200u), ZV_OK);
+    ZV_CHECK(!slot.sequence_started && slot.next_sequence == 0u);
+    ZV_CHECK_EQ(slot.last_activity_ms, 0u);
+    ZV_CHECK_EQ(slot.received, 0u);
+    ZV_CHECK_EQ(slot.reason, ZV_OTA_REASON_NONE);
+    ZV_CHECK(!zv_ota_slot_stalled(&slot, 90000u, 30000u));
+    ZV_CHECK_EQ(zv_ota_slot_write_seq(&slot, 0u, 100u, 90000u, 30000u), ZV_OK);
+    ZV_CHECK_EQ(zv_ota_slot_write_seq(&slot, 1u, 100u, 120000u, 30000u), ZV_ERR_POLICY);
+    ZV_CHECK_EQ(slot.reason, ZV_OTA_REASON_STALLED);
+
+    ZV_CHECK_EQ(zv_ota_slot_begin(&slot, 200u), ZV_OK);
+    ZV_CHECK_EQ(zv_ota_slot_write_seq(&slot, 0u, 100u, 150000u, 30000u), ZV_OK);
+    ZV_CHECK_EQ(zv_ota_slot_write_seq(&slot, 1u, 100u, 150100u, 30000u), ZV_OK);
+    ZV_CHECK_EQ(zv_ota_slot_finish_download(&slot), ZV_OK);
+    ZV_CHECK_EQ(zv_ota_slot_digest_result(&slot, true), ZV_OK);
+    ZV_CHECK_EQ(zv_ota_slot_begin_probation(&slot, 151000u), ZV_OK);
+    ZV_CHECK_EQ(slot.probation_started_ms, 151000u);
+}
+
 void test_suite_ota_slot(void)
 {
     test_digest_equal();
@@ -328,4 +438,8 @@ void test_suite_ota_slot(void)
     test_slot_retry_after_failure();
     test_slot_state_names();
     test_slot_follows_manifest_policy();
+    test_slot_probation_window();
+    test_slot_probation_requires_confirmation();
+    test_slot_sequence_and_stall();
+    test_slot_sequence_retry_resets_bookkeeping();
 }

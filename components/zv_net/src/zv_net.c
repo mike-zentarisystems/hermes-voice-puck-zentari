@@ -20,6 +20,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/event_groups.h"
 #include "freertos/queue.h"
+#include "freertos/semphr.h"
 #include "freertos/task.h"
 #include "mbedtls/base64.h"
 #include "mbedtls/md.h"
@@ -574,6 +575,145 @@ static const char *voice_error_category(const char *code)
     return "gateway_error";
 }
 
+/* Full display paints must never execute on the PCM consumer task. A paint
+ * measured up to 3620 ms, so the consumer stalled far longer than one audio
+ * frame and the 8-deep voice queue overflowed. Paints now go through a one-slot
+ * latest-state task-notification mailbox on a lower-priority task, and the
+ * worker is stopped and joined before menu or link painting so the renderer
+ * keeps one owner. */
+#define VOICE_UI_STOP UINT32_MAX
+#define VOICE_UI_STATUS_SHIFT 8u
+#define VOICE_UI_STATE_MASK 0xFFu
+
+typedef enum {
+    VOICE_UI_STATUS_IDLE = 0,
+    VOICE_UI_STATUS_LISTENING,
+    VOICE_UI_STATUS_THINKING,
+    VOICE_UI_STATUS_SPEAKING,
+    VOICE_UI_STATUS_ERROR,
+    VOICE_UI_STATUS_NO_SPEECH,
+    VOICE_UI_STATUS_NEW_CONVERSATION,
+    VOICE_UI_STATUS_COUNT
+} voice_ui_status_t;
+
+static TaskHandle_t s_voice_ui_task;
+static StaticSemaphore_t s_voice_ui_done_storage;
+static SemaphoreHandle_t s_voice_ui_done;
+static StaticSemaphore_t s_voice_render_lock_storage;
+static SemaphoreHandle_t s_voice_render_lock;
+
+/* Cosmetic updates must neither race a full paint nor stall the PCM consumer
+ * behind one. Hold the lock through the complete UI operation (including DMA
+ * completion and avatar/envelope changes), or drop this animation sample. */
+static esp_err_t voice_ui_tick(void)
+{
+    if (s_voice_render_lock == NULL || xSemaphoreTake(s_voice_render_lock, 0) != pdTRUE) return ESP_OK;
+    esp_err_t err = zv_ui_voice_tick();
+    xSemaphoreGive(s_voice_render_lock);
+    return err;
+}
+
+static esp_err_t voice_ui_audio(zv_avatar_state_t state, const int16_t *pcm, size_t count)
+{
+    if (s_voice_render_lock == NULL || xSemaphoreTake(s_voice_render_lock, 0) != pdTRUE) return ESP_OK;
+    esp_err_t err = zv_ui_voice_audio(state, pcm, count);
+    xSemaphoreGive(s_voice_render_lock);
+    return err;
+}
+
+static esp_err_t voice_ui_refresh(uint8_t signal_bars)
+{
+    if (s_voice_render_lock == NULL || xSemaphoreTake(s_voice_render_lock, 0) != pdTRUE) return ESP_OK;
+    esp_err_t err = zv_ui_voice_refresh(signal_bars);
+    xSemaphoreGive(s_voice_render_lock);
+    return err;
+}
+
+static void voice_ui_worker(void *unused)
+{
+    (void)unused;
+    uint32_t request;
+    uint32_t paints = 0u, max_paint_ms = 0u;
+    while (xTaskNotifyWait(0u, UINT32_MAX, &request, portMAX_DELAY) == pdTRUE) {
+        if (request == VOICE_UI_STOP) break;
+        zv_avatar_state_t state = (zv_avatar_state_t)((request & VOICE_UI_STATE_MASK) - 1u);
+        const char *status = "ERROR";
+        switch ((voice_ui_status_t)(request >> VOICE_UI_STATUS_SHIFT)) {
+        case VOICE_UI_STATUS_IDLE: status = "IDLE"; break;
+        case VOICE_UI_STATUS_LISTENING: status = "LISTENING"; break;
+        case VOICE_UI_STATUS_THINKING: status = "THINKING"; break;
+        case VOICE_UI_STATUS_SPEAKING: status = "SPEAKING"; break;
+        case VOICE_UI_STATUS_ERROR: status = "ERROR"; break;
+        case VOICE_UI_STATUS_NO_SPEECH: status = "NO SPEECH"; break;
+        case VOICE_UI_STATUS_NEW_CONVERSATION: status = "NEW CONVERSATION"; break;
+        default: break;
+        }
+        int64_t paint_started = esp_timer_get_time();
+        xSemaphoreTake(s_voice_render_lock, portMAX_DELAY);
+        if (zv_ui_show_voice_state(state, status) != ESP_OK) {
+            xEventGroupSetBits(s_events, WS_FAIL_BIT);
+        }
+        xSemaphoreGive(s_voice_render_lock);
+        uint32_t paint_ms = (uint32_t)((esp_timer_get_time() - paint_started) / 1000);
+        if (paint_ms > max_paint_ms) max_paint_ms = paint_ms;
+        paints++;
+    }
+    ESP_LOGI(TAG, "voice_ui_diag paints=%lu max_paint_ms=%lu stack_min=%u",
+             (unsigned long)paints, (unsigned long)max_paint_ms,
+             (unsigned)uxTaskGetStackHighWaterMark(NULL));
+    xSemaphoreGive(s_voice_ui_done);
+    vTaskDelete(NULL);
+}
+
+static esp_err_t voice_ui_start(void)
+{
+    if (s_voice_ui_task != NULL) return ESP_ERR_INVALID_STATE;
+    s_voice_ui_done = xSemaphoreCreateBinaryStatic(&s_voice_ui_done_storage);
+    if (s_voice_ui_done == NULL) return ESP_ERR_NO_MEM;
+    s_voice_render_lock = xSemaphoreCreateMutexStatic(&s_voice_render_lock_storage);
+    if (s_voice_render_lock == NULL) {
+        vSemaphoreDelete(s_voice_ui_done);
+        s_voice_ui_done = NULL;
+        return ESP_ERR_NO_MEM;
+    }
+    UBaseType_t priority = uxTaskPriorityGet(NULL);
+    if (priority > 0u) priority--;
+    if (xTaskCreate(voice_ui_worker, "zv_voice_ui", 4096u, NULL, priority,
+                    &s_voice_ui_task) != pdPASS) {
+        s_voice_ui_task = NULL;
+        vSemaphoreDelete(s_voice_render_lock);
+        s_voice_render_lock = NULL;
+        vSemaphoreDelete(s_voice_ui_done);
+        s_voice_ui_done = NULL;
+        return ESP_ERR_NO_MEM;
+    }
+    return ESP_OK;
+}
+
+static void voice_ui_request(zv_avatar_state_t state, voice_ui_status_t status)
+{
+    /* An absent worker means the settings screen owns the renderer; the state
+     * is repainted when the worker resumes. */
+    if (s_voice_ui_task == NULL) return;
+    if (xTaskNotify(s_voice_ui_task,
+                    ((uint32_t)status << VOICE_UI_STATUS_SHIFT) | ((uint32_t)state + 1u),
+                    eSetValueWithOverwrite) != pdPASS) {
+        xEventGroupSetBits(s_events, WS_FAIL_BIT);
+    }
+}
+
+static void voice_ui_stop(void)
+{
+    if (s_voice_ui_task == NULL) return;
+    xTaskNotify(s_voice_ui_task, VOICE_UI_STOP, eSetValueWithOverwrite);
+    xSemaphoreTake(s_voice_ui_done, portMAX_DELAY);
+    s_voice_ui_task = NULL;
+    vSemaphoreDelete(s_voice_render_lock);
+    s_voice_render_lock = NULL;
+    vSemaphoreDelete(s_voice_ui_done);
+    s_voice_ui_done = NULL;
+}
+
 static esp_err_t voice_read_frame(const char *json, const zv_device_credential_t *credential,
                                   const char *session_id, voice_turn_t *turn)
 {
@@ -627,7 +767,7 @@ static esp_err_t voice_read_frame(const char *json, const zv_device_credential_t
         if (result == ESP_OK) {
             turn->state = VOICE_SPEAKING;
             turn->stage_started_ms = now_ms();
-            (void)zv_ui_show_voice_state(ZV_AVATAR_SPEAKING, "SPEAKING");
+            voice_ui_request(ZV_AVATAR_SPEAKING, VOICE_UI_STATUS_SPEAKING);
         }
     } else if (strcmp(kind->valuestring, "audio.output.chunk") == 0 && count == 7u &&
                turn->state == VOICE_SPEAKING) {
@@ -641,13 +781,13 @@ static esp_err_t voice_read_frame(const char *json, const zv_device_credential_t
             turn->output_bytes + bytes > 1920000u) goto done; /* 60 s of 16 kHz PCM16 */
         turn->output_bytes += bytes;
         result = zv_audio_voice_playback(s_voice_output_pcm, bytes / 2u);
-        if (result == ESP_OK) (void)zv_ui_voice_audio(ZV_AVATAR_SPEAKING, s_voice_output_pcm, bytes / 2u);
+        if (result == ESP_OK) (void)voice_ui_audio(ZV_AVATAR_SPEAKING, s_voice_output_pcm, bytes / 2u);
         memset(s_voice_output_pcm, 0, sizeof(s_voice_output_pcm));
     } else if (strcmp(kind->valuestring, "audio.output.stop") == 0 && count == 6u &&
                turn->state == VOICE_SPEAKING && turn->output_bytes > 0u) {
         result = zv_audio_voice_playback_finish();
         turn->state = VOICE_IDLE;
-        (void)zv_ui_show_voice_state(ZV_AVATAR_IDLE, "IDLE");
+        voice_ui_request(ZV_AVATAR_IDLE, VOICE_UI_STATUS_IDLE);
     } else if (strcmp(kind->valuestring, "error") == 0 && count == 7u &&
                turn->state != VOICE_IDLE) {
         const cJSON *code = cJSON_GetObjectItemCaseSensitive(root, "code");
@@ -659,9 +799,9 @@ static esp_err_t voice_read_frame(const char *json, const zv_device_credential_t
         zv_audio_voice_close();
         turn->state = VOICE_IDLE;
         if (no_speech)
-            (void)zv_ui_show_voice_state(ZV_AVATAR_IDLE, "NO SPEECH");
+            voice_ui_request(ZV_AVATAR_IDLE, VOICE_UI_STATUS_NO_SPEECH);
         else
-            (void)zv_ui_show_voice_state(ZV_AVATAR_ERROR, "ERROR");
+            voice_ui_request(ZV_AVATAR_ERROR, VOICE_UI_STATUS_ERROR);
         result = ESP_OK;
     }
 done:
@@ -711,8 +851,11 @@ static esp_err_t voice_session_loop(esp_websocket_client_handle_t client,
     /* A contact held through reauthentication must never start a new turn. */
     bool touch_latched = true;
     uint32_t mic_pressed_ms = UINT32_MAX;
-    if (zv_ui_settings_active()) (void)zv_ui_settings_resume(wifi_signal_bars(), true);
-    else (void)zv_ui_show_voice_state(ZV_AVATAR_IDLE, "IDLE");
+    esp_err_t err = ESP_OK;
+    uint32_t last_header_ms = 0u;
+    /* The worker owns every voice-state paint while it runs. It is absent while
+     * the settings screen is open: that screen has its own renderer owner. */
+    bool ui_worker_running = false;
     s_voice_queue_storage = heap_caps_malloc(VOICE_QUEUE_DEPTH * sizeof(voice_frame_t),
                                               MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT);
     if (s_voice_queue_storage == NULL) return ESP_ERR_NO_MEM;
@@ -723,11 +866,23 @@ static esp_err_t voice_session_loop(esp_websocket_client_handle_t client,
         s_voice_queue_storage = NULL;
         return ESP_ERR_NO_MEM;
     }
+    if (zv_ui_settings_active()) {
+        (void)zv_ui_settings_resume(wifi_signal_bars(), true);
+    } else {
+        err = voice_ui_start();
+        if (err != ESP_OK) {
+            vQueueDelete(s_voice_queue);
+            s_voice_queue = NULL;
+            heap_caps_free(s_voice_queue_storage);
+            s_voice_queue_storage = NULL;
+            return err;
+        }
+        ui_worker_running = true;
+        voice_ui_request(ZV_AVATAR_IDLE, VOICE_UI_STATUS_IDLE);
+    }
     portENTER_CRITICAL(&s_voice_queue_lock);
     s_voice_active = true;
     portEXIT_CRITICAL(&s_voice_queue_lock);
-    esp_err_t err = ESP_OK;
-    uint32_t last_header_ms = 0u;
     while (err == ESP_OK) {
         EventBits_t bits = xEventGroupGetBits(s_events);
         if ((bits & (WS_FAIL_BIT | WIFI_DISCONNECTED_BIT)) != 0u) {
@@ -750,7 +905,16 @@ static esp_err_t voice_session_loop(esp_websocket_client_handle_t client,
             err = zv_ui_settings_poll(touched, x, y, now_ms());
             if (err != ESP_OK) break;
             touch_latched = true; mic_pressed_ms = UINT32_MAX;
-            if (!zv_ui_settings_active()) (void)zv_ui_show_voice_state(ZV_AVATAR_IDLE, "IDLE");
+            if (!zv_ui_settings_active()) {
+                /* The settings screen closed, so the voice renderer takes the
+                 * panel back and the worker resumes owning paints. */
+                if (!ui_worker_running) {
+                    err = voice_ui_start();
+                    if (err != ESP_OK) break;
+                    ui_worker_running = true;
+                }
+                voice_ui_request(ZV_AVATAR_IDLE, VOICE_UI_STATUS_IDLE);
+            }
             vTaskDelay(pdMS_TO_TICKS(16u));
             continue;
         }
@@ -758,7 +922,7 @@ static esp_err_t voice_session_loop(esp_websocket_client_handle_t client,
             rand_uuid(turn.correlation_id); turn.started_ms=now_ms(); turn.stage_started_ms=turn.started_ms;
             err=voice_send_event(client,credential,session_id,&turn,"conversation.reset",false);
             if (err!=ESP_OK) break;
-            turn.state=VOICE_THINKING; (void)zv_ui_show_voice_state(ZV_AVATAR_THINKING,"NEW CONVERSATION");
+            turn.state=VOICE_THINKING; voice_ui_request(ZV_AVATAR_THINKING, VOICE_UI_STATUS_NEW_CONVERSATION);
         }
         bool on_mic = touched && zv_ui_touch_is_voice_function(x, y);
         bool on_volume = touched && zv_ui_touch_is_volume(x, y);
@@ -771,6 +935,9 @@ static esp_err_t voice_session_loop(esp_websocket_client_handle_t client,
             }
             touch_latched = true;
             mic_pressed_ms = UINT32_MAX;
+            /* The settings screen becomes the renderer owner: stop and join the
+             * worker so two owners never paint the same panel. */
+            if (ui_worker_running) { voice_ui_stop(); ui_worker_running = false; }
             err = on_volume ? zv_ui_settings_open_volume(wifi_signal_bars(), !active_turn) :
                               zv_ui_settings_open(wifi_signal_bars(), !active_turn);
             if (err != ESP_OK) break;
@@ -785,6 +952,7 @@ static esp_err_t voice_session_loop(esp_websocket_client_handle_t client,
             (turn.state == VOICE_LISTENING || !touch_latched)) {
             voice_cancel_turn(client, credential, session_id, &turn);
             touch_latched = true;
+            if (ui_worker_running) { voice_ui_stop(); ui_worker_running = false; }
             (void)show_link_state(ZV_LINK_RECONNECTING, 0u);
             *reconnect = true;
             break;
@@ -793,11 +961,12 @@ static esp_err_t voice_session_loop(esp_websocket_client_handle_t client,
             touched && !touch_latched && on_mic) {
             voice_cancel_turn(client, credential, session_id, &turn);
             touch_latched = true;
+            if (ui_worker_running) { voice_ui_stop(); ui_worker_running = false; }
             (void)show_link_state(ZV_LINK_RECONNECTING, 0u);
             *reconnect = true;
             break;
         }
-        if (turn.state == VOICE_THINKING) (void)zv_ui_voice_tick();
+        if (turn.state == VOICE_THINKING) (void)voice_ui_tick();
         /* Handle local controls before a queued frame can block on codec/LCD I/O. */
         bool frame_received = xQueueReceive(s_voice_queue, &s_voice_processing, 0) == pdTRUE;
         if (frame_received) {
@@ -828,7 +997,7 @@ static esp_err_t voice_session_loop(esp_websocket_client_handle_t client,
                                            "audio.input.start", true);
                     if (err != ESP_OK) break;
                     turn.state = VOICE_LISTENING;
-                    (void)zv_ui_show_voice_state(ZV_AVATAR_LISTENING, "LISTENING");
+                    voice_ui_request(ZV_AVATAR_LISTENING, VOICE_UI_STATUS_LISTENING);
                 }
             } else if (!touched) {
                 touch_latched = false;
@@ -839,7 +1008,7 @@ static esp_err_t voice_session_loop(esp_websocket_client_handle_t client,
                 turn.input_bytes + 512u <= 480000u) {
                 err = zv_audio_voice_capture(s_voice_input_pcm);
                 if (err == ESP_OK) err = voice_send_chunk(client, credential, session_id, &turn, s_voice_input_pcm);
-                if (err == ESP_OK) (void)zv_ui_voice_audio(ZV_AVATAR_LISTENING, s_voice_input_pcm, 256u);
+                if (err == ESP_OK) (void)voice_ui_audio(ZV_AVATAR_LISTENING, s_voice_input_pcm, 256u);
                 memset(s_voice_input_pcm, 0, sizeof(s_voice_input_pcm));
                 if (err != ESP_OK) break;
                 turn.input_bytes += 512u;
@@ -850,10 +1019,11 @@ static esp_err_t voice_session_loop(esp_websocket_client_handle_t client,
                 if (turn.input_bytes > 0u) {
                     turn.state = VOICE_THINKING;
                     turn.stage_started_ms = now_ms();
-                    (void)zv_ui_show_voice_state(ZV_AVATAR_THINKING, "THINKING");
+                    voice_ui_request(ZV_AVATAR_THINKING, VOICE_UI_STATUS_THINKING);
                 } else {
                     zv_audio_voice_close();
                     turn.state = VOICE_IDLE;
+                    if (ui_worker_running) { voice_ui_stop(); ui_worker_running = false; }
                     (void)show_link_state(ZV_LINK_RECONNECTING, 0u);
                     *reconnect = true;
                     break;
@@ -871,7 +1041,7 @@ static esp_err_t voice_session_loop(esp_websocket_client_handle_t client,
         if ((turn.state == VOICE_IDLE || turn.state == VOICE_THINKING) &&
             (uint32_t)(now_ms() - last_header_ms) >= 1000u) {
             last_header_ms = now_ms();
-            (void)zv_ui_voice_refresh(wifi_signal_bars());
+            (void)voice_ui_refresh(wifi_signal_bars());
         }
         /* The codec write already paces output. Extra sleeps make the consumer
          * slower than the gateway's 16 kHz stream and overflow the small queue. */
@@ -888,6 +1058,7 @@ static esp_err_t voice_session_loop(esp_websocket_client_handle_t client,
     }
     voice_receive_stop();
     zv_audio_voice_close();
+    if (ui_worker_running) voice_ui_stop();
     (void)zv_power_update(now_ms(), false, false);
     memset(s_voice_queue_storage, 0, VOICE_QUEUE_DEPTH * sizeof(voice_frame_t));
     memset(&s_voice_incoming, 0, sizeof(s_voice_incoming));
@@ -1148,3 +1319,4 @@ esp_err_t zv_wss_acceptance_demo(void)
 #else
 esp_err_t zv_wss_acceptance_demo(void) { return ESP_ERR_NOT_SUPPORTED; }
 #endif
+
