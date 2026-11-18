@@ -69,8 +69,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 3551,
-      "sha256": "97f5d7687508a6d0d2cb691ee5c2a64ed829350cd9342dc201d6184db7f3b2fa"
+      "bytes": 4177,
+      "sha256": "6ec4e168c3c18969a1c3e8c6337475beada80ceadef1aa1c91f5b426584abb8f"
     },
     {
       "path": "CMakeLists.txt",
