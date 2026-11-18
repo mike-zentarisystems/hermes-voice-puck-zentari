@@ -49,8 +49,8 @@
     },
     {
       "path": ".github/workflows/validate.yml",
-      "bytes": 2349,
-      "sha256": "93ff6a98eb49a13a087f870b17bc3fde7f37016fc32e079603c265012a6c4fdb"
+      "bytes": 2808,
+      "sha256": "a9567d8666dc08e0e87628e40dd2a6065cf6fd81054c8b07613d2c9b532cdd28"
     },
     {
       "path": ".gitignore",
@@ -84,8 +84,8 @@
     },
     {
       "path": "Dockerfile",
-      "bytes": 472,
-      "sha256": "2326b188d8fea346739caa423e97e08415739193f023ffc98a73cf1d257c30ca"
+      "bytes": 836,
+      "sha256": "b6b52ecb738de775eddfc8b2cef10262af9a55da158430b7ac4a38a81a40a070"
     },
     {
       "path": "GOVERNANCE.md",
@@ -614,8 +614,8 @@
     },
     {
       "path": "docs/MAINTAINER.md",
-      "bytes": 3593,
-      "sha256": "f27e2c5ed9a55bc859980ce8f16ed0f93f925269d53a8c57efaccc993fac8a16"
+      "bytes": 4159,
+      "sha256": "afec29254409b83d57544b2702ef53c2fe7d42dde626bfd3ef51d7f49dca7439"
     },
     {
       "path": "docs/PUCK-MATERIALS.md",
