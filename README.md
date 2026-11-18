@@ -1,113 +1,131 @@
-# Zenti by Zentari
+# Hermes Voice Agent
 
-**One Hermes voice agent across your phone and puck, with actions you can see
-and control.** That is the direction of this independent Zentari project.
+**A private voice helper you run yourself, in your browser or on a small round puck.**
 
-Today, the source provides an installable **browser PWA**, a local-first voice
-gateway, and experimental **round ESP32-S3 puck** firmware. Talk, type, cancel a
-reply, and reset a conversation. Use the browser without hardware, or explore
-the reference puck. Direct Hermes, cross-device handoff and visible agent-action
-approval are planned; they are not enabled by the current quick start.
+Talk or type, and it answers out loud. Speech recognition, the chat model and
+the voice all run on hardware you control. Nothing goes to a cloud service
+unless you point it at one.
 
-**Experimental source preview.** The browser demo is scripted. Hardware source is
-experimental. A stable 1.0 release is not accepted; see [release status](docs/RELEASE-STATUS.md).
+New here? Read the [plain-English overview (eli10.md)](eli10.md) first.
 
-[Install the PWA](docs/INSTALL.md#install-the-browser-pwa) ·
-[Puck parts and materials](docs/PUCK-MATERIALS.md) ·
-[Architecture](docs/ARCHITECTURE.md)
+[Try the demo](#try-the-demo-in-one-minute) ·
+[Run it for real](#run-the-real-browser-client-on-linux) ·
+[Install the app](docs/INSTALL.md#install-the-browser-pwa) ·
+[Puck parts](docs/PUCK-MATERIALS.md) ·
+[How it works](docs/ARCHITECTURE.md)
 
-![Zentari Voice browser PWA and experimental ESP32-S3 puck, with the official Nous Research Hermes logo. Direct Hermes integration is planned.](docs/media/zentari-voice-overview.png)
+![Hermes Voice Agent browser PWA and experimental ESP32-S3 puck, with the official Nous Research Hermes logo. Direct Hermes integration is planned.](docs/media/zentari-voice-overview.png)
 
-Hermes / Nous Girl logo © 2025 Nous Research, used with its
-[MIT notice](third_party/nous-research/LICENSE). This is an independent Zentari
-project; no Nous Research affiliation or endorsement is implied.
+> **Experimental preview.** The browser app works. The puck firmware is an
+> experiment. Connecting to the [Hermes agent](docs/HERMES-INTEGRATION.md) is
+> the next step and is **not** in this release. See [release status](docs/RELEASE-STATUS.md).
 
-## Watch the physical puck
+## Names used in this project
 
-[Watch the owner-recorded puck demo (14 seconds, MP4)](docs/media/video/puck-demo-2026-11-07.mp4)
+- **Hermes Voice Agent** is the project and the browser app, built by Zentari Systems.
+  It was previously called Zentari Voice.
+- **The puck** is the optional round touch-screen device.
+- **Zenti** and **Orbit** are the two on-screen characters you can choose.
+- **Hermes** is the [Nous Research agent](https://github.com/NousResearch/hermes-agent)
+  this project plans to connect to. The repository name refers to that goal.
 
-<a href="docs/media/video/puck-demo-2026-11-07.mp4"><img src="docs/media/puck-demo-still.png" width="270" alt="Frame from the owner-recorded physical puck video, showing its Speaking state and touch controls."></a>
+## What works today
 
-Recorded on the owner's installed puck, supplied as the November 7 demo. It
-shows touch-to-talk and the Listening, Thinking and Speaking states. The frame
-above is taken from that video, not a render or browser screenshot. The clip
-does not identify the firmware commit, backend or model, and does not establish
-acceptance of this public source. [Media sources and limits](docs/media/README.md).
-
-## Browser app or physical puck?
-
-| | Browser PWA | Experimental puck |
-| --- | --- | --- |
-| Where it runs | Desktop or mobile browser; standalone app window on supported browsers | Waveshare ESP32-S3-Touch-LCD-1.85C BOX Rev2 |
-| Controls | Text, hold-to-talk, mute, cancel, settings and local transcript export | Round 360×360 touch display, hold-to-talk, menu and volume controls |
-| What it needs | A trusted HTTPS gateway and configured chat/speech models | Reviewed firmware/configuration plus a reachable gateway and model services |
-| Offline | Cached app shell; voice and AI still need the gateway | No on-device model inference claim |
-
-The no-account web demo below is a separate scripted tour. It is not the live
-PWA or an AI benchmark. Browser and puck conversation contexts do not synchronize.
-
-![Current architecture: browser PWA through a session bridge, or experimental ESP32-S3 puck, connects to the voice gateway and configured speech and chat services. Direct Hermes integration is planned, not selected by this preview.](docs/media/system-overview.svg)
-
-**Hermes direction:** direct Hermes agent integration, without Home Assistant,
-is the intended next step. The current standalone entrypoint uses an
-OpenAI-compatible chat backend; it does not activate the included legacy Hermes
-adapter or expose an agent's tools. See [integration scope](docs/HERMES-INTEGRATION.md).
-
-## What works, what is experimental, what comes next
-
-| Status | Scope |
+| Status | What |
 | --- | --- |
-| **Implemented in source** | Browser text/voice controls, Stop, mute, reset, local transcript export, PWA installation metadata and offline shell; authenticated gateway with a configured chat backend |
-| **Experimental** | Reference puck firmware, physical controls, signed-approval and OTA source; remaining hardware, battery, recovery and soak acceptance is documented |
-| **Planned** | Direct Hermes agent integration; phone-to-puck conversation handoff; visible agent actions with approval before consequential steps; a simpler guided setup |
+| **Works** | Browser app: talk, type, Stop, mute, new conversation, save a transcript, install as an app. Password-protected local gateway with your chosen chat model. |
+| **Experimental** | Puck firmware and touch controls. Signed approvals and over-the-air updates exist in source but are off by default. |
+| **Planned** | Direct Hermes agent connection, moving a conversation between phone and puck, approving agent actions on screen, guided setup. |
 
-The planned experience centers on five things:
+Browser and puck conversations are separate today; they do not sync.
 
-- **Direct Hermes:** use the agent through the voice gateway without requiring Home Assistant.
-- **Phone and puck together:** continue the same conversation across devices, with explicit session ownership and reset behavior.
-- **Visible actions:** show what the agent wants to do and keep approval, cancellation and results understandable.
-- **Clear privacy controls:** make microphone, memory, export/reset and any external model routing visible.
-- **Simple setup:** guide users from models and a trusted gateway to an installed PWA or a correctly configured puck.
+## Watch the puck
 
-Cross-device context, real Hermes tools and their approval flow still need
-implementation and end-to-end verification. A screenshot or demo does not move
-a planned feature into the implemented column.
+<a href="docs/media/video/puck-demo-2026-11-07.mp4"><img src="docs/media/puck-demo-still.png" width="270" alt="Frame from the physical puck video, showing its Speaking state and touch controls."></a>
 
-## Try the web demo — no account or hardware
+[14-second video (MP4)](docs/media/video/puck-demo-2026-11-07.mp4) of a puck
+showing touch-to-talk and its Listening, Thinking and Speaking states. It was
+recorded on an earlier firmware build, so it shows the idea, not proof that this
+exact source has passed hardware testing. [About the media](docs/media/README.md).
 
-Python 3.11+ is enough. From this directory:
+## Try the demo in one minute
+
+No account, model or hardware needed. You need Python 3.11 or newer.
 
 ```bash
 python3 tools/build_site.py
 python3 -m http.server 8080 --bind 127.0.0.1 --directory dist/site
 ```
 
-Open <http://localhost:8080>. Everything stays in the page: no model, microphone,
-network API, analytics, account, or stored messages. **Stop** cancels the pending
-scripted reply. This is an interaction demo, not a live AI performance claim.
-The same seven-file site can be served from a GitHub project Pages subdirectory.
+Open <http://localhost:8080>. The answers are scripted: nothing listens to your
+microphone and nothing leaves the page. **Stop** cancels the pending reply.
 
 ## Run the real browser client on Linux
 
-Requires Ubuntu 24.04+, Docker with Compose v2, Python 3.11+, OpenSSL, a local
-OpenAI-compatible chat backend, and separately licensed STT/TTS models. Start
-with a machine with at least 8 GB RAM; the gateway is capped at 4 GB and four CPUs.
-Model performance depends on the CPU and model. No inference speed is promised.
+### Before you start
 
-1. Run your local backend with a model you have already installed. The default
-   configuration targets Ollama's OpenAI-compatible `/v1` API on port 11434 and
-   model `qwen3.5:4b`; choose the exact name your backend serves with `--model`.
-   Make the backend reachable from this container using its restricted host
-   interface. Do not expose Ollama to the public internet.
-2. Put a CTranslate2 faster-whisper model in `models/stt/` (including `model.bin`,
-   `config.json`, `tokenizer.json`, and its `vocabulary.txt` or `vocabulary.json`); put a Piper voice in `models/voice.onnx` and
-   its configuration in `models/voice.onnx.json`. Review each model card and
-   license before downloading or redistributing it. Weights are not included.
-   See [model integrity](docs/INSTALL.md#model-integrity).
-3. Create private configuration in an ordinary Linux terminal:
+- Linux (Ubuntu 24.04 or newer) on an **x86-64 (Intel/AMD)** machine. The
+  container and its locked Python packages are built for `linux/amd64` only, so
+  ARM machines such as Raspberry Pi or Apple Silicon are not supported yet.
+  On Windows, use WSL2 with the checkout inside the Linux filesystem.
+- At least 8 GB of memory. The gateway container is capped at 4 GB and four CPUs.
+- Docker with Compose v2, Python 3.11 or newer, and OpenSSL.
+- [Ollama](https://ollama.com) or another OpenAI-compatible chat server.
+
+### 1. Get a chat model and let the container reach it
+
+Download a model. Setup defaults to `qwen3.5:4b`; this preview was last checked
+end to end with `qwen2.5:7b`. Use whichever you pass to setup with `--model`.
+
+```bash
+ollama pull qwen3.5:4b
+```
+
+Ollama only listens on `127.0.0.1` by default, which the container cannot
+reach. Make it listen on Docker's host-side bridge address instead, so it is
+reachable from containers but **not** from your network:
+
+```bash
+# Print Docker's host-side bridge address (the docker0 interface):
+ip -4 -o addr show docker0 | awk '{print $4}' | cut -d/ -f1
+
+# Tell Ollama to listen there. In the editor, add under [Service]:
+#   Environment="OLLAMA_HOST=<address printed above>:11434"
+sudo systemctl edit ollama.service
+sudo systemctl daemon-reload
+sudo systemctl restart ollama
+```
+
+After this change, run host-side `ollama` commands with
+`OLLAMA_HOST=<that address>:11434` in front. Do not set `OLLAMA_HOST=0.0.0.0`
+on a machine others can reach, and never expose Ollama to the internet.
+
+### 2. Download the speech models
+
+Weights are not included. These are the speech models this preview was
+checked with; review each model card and license before you use them.
 
 ```bash
 python3 -m venv .venv
+.venv/bin/python -m pip install huggingface_hub
+mkdir -p models/stt
+.venv/bin/hf download Systran/faster-whisper-tiny.en --local-dir models/stt
+curl -L -o models/voice.onnx \
+  https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/ljspeech/medium/en_US-ljspeech-medium.onnx
+curl -L -o models/voice.onnx.json \
+  https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/ljspeech/medium/en_US-ljspeech-medium.onnx.json
+```
+
+You can use any faster-whisper (CTranslate2) model and any Piper voice instead.
+`models/stt/` needs `model.bin`, `config.json`, `tokenizer.json` and
+`vocabulary.txt` (or `vocabulary.json`). For checksums and provenance, see
+[model integrity](docs/INSTALL.md#model-integrity).
+
+### 3. Create your private settings and start
+
+Run this in an ordinary (non-root) Linux terminal:
+
+```bash
 .venv/bin/python -m pip install -r pwa/requirements-bridge.txt
 .venv/bin/python tools/setup.py
 printf 'ZENTI_UID=%s\nZENTI_GID=%s\n' "$(id -u)" "$(id -g)" > .env
@@ -117,48 +135,55 @@ docker compose up --build -d --wait
 .venv/bin/python tools/doctor.py --live
 ```
 
-Setup asks for a hidden password of at least 16 characters and generates a
-dedicated browser identity, a 30-day expiry, and local TLS material. Never paste
-the private files into an issue. It refuses an existing configuration directory.
-Only trust `.runtime/ca.pem` in your local browser/OS after checking the
-displayed SHA-256 fingerprint against that file. Never import `server-key.pem`.
-Open <https://localhost:8443>, open **Settings**, and sign in. Do not bypass TLS
-verification. [Installation](docs/INSTALL.md) covers trust, models and recovery.
+`tools/setup.py` asks for a password (16 characters or more) and creates a
+private `.runtime/` folder with your sign-in settings and a local TLS
+certificate that lasts 30 days. If setup fails, it tells you why and you can
+run it again.
 
-The default Compose publishes only host loopback. It creates no public endpoint,
-cloud subscription, privileged mount, Docker socket, or production enrollment.
-For a remote HTTPS backend, pass `--allow-remote --backend` explicitly during
-setup and store its optional API key in `.runtime/backend-key` with mode 600.
-There is no automatic paid fallback. Model requests leave the gateway only for
-the configured backend; read its retention terms before opting in.
+### 4. Trust the certificate and sign in
+
+1. Check that the SHA-256 fingerprint printed above matches `.runtime/ca.pem`,
+   then import **only** `.runtime/ca.pem` into your browser or OS trust store.
+   Never import `server-key.pem`, and never click past a certificate warning.
+2. Open <https://localhost:8443>, open **Settings** and sign in.
+
+[docs/INSTALL.md](docs/INSTALL.md) covers installing the app on a phone or
+desktop, troubleshooting and updates.
+
+### Privacy and network defaults
+
+- The gateway only listens on this computer (`127.0.0.1`). It opens no public
+  port and needs no cloud account.
+- Your words go only to the chat backend you configured. There is no automatic
+  paid fallback. To use a remote HTTPS backend, pass `--allow-remote --backend`
+  to setup and put its API key in `.runtime/backend-key` (mode 600). Read that
+  provider's data-retention terms first.
+- Conversations live in memory only: up to 16 messages per conversation, and
+  they are forgotten after 30 minutes of quiet or when you start a new one.
+  Audio and transcripts are not logged. **Export** saves a Markdown copy only
+  when you ask.
 
 ## Daily controls
 
-- **Hold to talk:** starts capture while held. Microphone access is requested
-  only after an explicit user action.
-- **Mute microphone:** stops input; it preserves an already playing reply.
-- **Cancel response / Stop audio:** cancels processing and queued playback.
-- **Hands-free:** half duplex; it pauses input during replies. Stop it with
-  microphone mute. Wake words and full duplex are not supported.
-- **New conversation:** resets server context and clears the visible transcript.
-- **Settings:** microphone selection, volume, neutral Zenti/Orbit avatars,
-  voice replies, and reduced motion. Preferences stay on that browser.
-
-Conversation memory is RAM-only, bounded to 16 messages/12 KB per conversation,
-64 conversations and a 30-minute idle expiry. It is scoped to authenticated
-device plus server-bound principal. A browser bridge is a single-owner service,
-not a multi-user account system; its password sessions share that owner's
-conversation. Browser and puck contexts do not synchronize. No raw audio or
-transcript logs are enabled. Explicit Markdown export downloads a local file.
+- **Hold to talk:** records while held. The microphone is only requested after you press it.
+- **Mute microphone:** stops listening; a reply that is already playing continues.
+- **Cancel response / Stop audio:** stops thinking and speaking.
+- **Hands-free:** takes turns automatically and pauses listening while it speaks.
+  Mute the microphone to stop. Wake words are not supported.
+- **New conversation:** clears the chat on screen and on the server.
+- **Settings:** microphone, volume, Zenti or Orbit avatar, spoken replies and
+  reduced motion. These stay in that browser.
 
 ## Hardware and development
 
-The reference board is Waveshare ESP32-S3-Touch-LCD-1.85C BOX Rev2. See the
-[parts and materials guide](docs/PUCK-MATERIALS.md) for the display, audio,
-enclosure, power, battery and host-computer requirements. See the upstream
-revision and pin provenance in [hardware](hardware/pinmap.json) and
-[vendor notices](third_party/waveshare/UPSTREAM.md). Similar names do not establish
-pin compatibility. ESP-IDF 6.1 is the firmware baseline.
+The reference puck is a **Waveshare ESP32-S3-Touch-LCD-1.85C BOX Rev2**. See
+[puck parts](docs/PUCK-MATERIALS.md) and [hardware notes](docs/HARDWARE.md).
+Pins and vendor details are in [hardware/pinmap.json](hardware/pinmap.json) and
+[third_party/waveshare](third_party/waveshare/UPSTREAM.md); a board with a
+similar name may have different pins. Firmware targets ESP-IDF 6.1. Do not
+flash a working puck with this preview without a full backup.
+
+Run the tests:
 
 ```bash
 cmake -S tests/host -B build/host
@@ -172,24 +197,24 @@ node tests/pwa/node_modules/playwright/cli.js install chromium firefox webkit
 node --test tests/pwa/browser.e2e.cjs tests/pwa/demo.e2e.cjs
 ```
 
-Browser tests use synthetic microphones, identities, and speech/model fixtures.
-They do not prove phone audio, a real model, or charging. Firmware, approval,
-OTA and hardware recovery instructions and limits are in [the hardware guide](docs/HARDWARE.md).
-Do not flash the accepted private installation with this preview.
+Browser tests use simulated microphones and models, so they do not prove phone
+audio, a real model or charging.
 
-## Source, privacy and contribution
+## More
 
-- [Architecture and protocol](docs/ARCHITECTURE.md)
-- [Security and reporting](SECURITY.md) · [Threat model](docs/THREAT-MODEL.md)
-- [Contributing](CONTRIBUTING.md) · [Support](SUPPORT.md) · [License inventory](docs/LICENSES.md)
-- [Release and rollback](docs/RELEASE.md) · [Changelog](CHANGELOG.md)
+- [How it works](docs/ARCHITECTURE.md) · [Hermes plan](docs/HERMES-INTEGRATION.md)
+- [Security](SECURITY.md) · [Threat model](docs/THREAT-MODEL.md)
+- [Contributing](CONTRIBUTING.md) · [Support](SUPPORT.md) · [Changelog](CHANGELOG.md)
+- [Release status and remaining checks](docs/RELEASE-STATUS.md) · [Release and rollback](docs/RELEASE.md)
 
-The source export has no private repository history, production configuration,
-customer records or model weights. Procedural public artwork is generated from
-source; the earlier standalone reference portraits remain omitted. Presentation
-media separately includes the official upstream Hermes logo with its MIT notice
-and owner-supplied hardware footage; see [media provenance](docs/media/README.md).
-Existing Apache-2.0 and vendor notices are retained. The owner selected Apache-2.0 for the Zentari-owned
-source, including the extracted gateway; third-party licenses remain separate.
-Private security and conduct contact: [info@zentarisystems.io](mailto:info@zentarisystems.io).
-See [the license inventory](docs/LICENSES.md) and [maintainer procedure](docs/MAINTAINER.md).
+## License and credits
+
+Zentari-owned source is under the [Apache-2.0 license](LICENSE); third-party
+parts keep their own licenses (see [license inventory](docs/LICENSES.md) and
+[NOTICE](NOTICE)). No model weights are included.
+
+The Hermes / Nous Girl logo is © 2025 Nous Research, used under its
+[MIT notice](third_party/nous-research/LICENSE). This is an independent project;
+it is not affiliated with or endorsed by Nous Research.
+
+Private security or conduct reports: [info@zentarisystems.io](mailto:info@zentarisystems.io).

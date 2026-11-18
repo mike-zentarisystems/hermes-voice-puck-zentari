@@ -16,7 +16,7 @@ from voice_turn import PCM, VoiceTurnSession, UnavailableHermes, _segments
 
 class FakeStt:
     async def transcribe(self, pcm):
-        return "What's the status of Citadel?"
+        return "What's the status of the server?"
 
 
 class FakeTts:
@@ -26,7 +26,7 @@ class FakeTts:
 
 class FakeHermes:
     async def answer(self, text):
-        return "Citadel is available."
+        return "The server is available."
 
 
 class VoiceTurnTests(unittest.IsolatedAsyncioTestCase):
@@ -367,7 +367,7 @@ class SentencePipelineTests(unittest.IsolatedAsyncioTestCase):
         return sent
 
     def test_segments_start_short_and_group_the_rest(self):
-        self.assertEqual(_segments("Citadel is available."), ["Citadel is available."])
+        self.assertEqual(_segments("The server is available."), ["The server is available."])
         segments = _segments(self.ANSWER)
         self.assertEqual(segments[0], "Yes. The GPU is at 41 degrees and idle.")
         self.assertEqual(" ".join(segments), self.ANSWER)
@@ -434,7 +434,7 @@ class SentencePipelineTests(unittest.IsolatedAsyncioTestCase):
                 return b"\x00\x00" * 512 * 10  # ten 1024-byte chunks = 320 ms
         loop = asyncio.get_running_loop()
         start = loop.time()
-        sent = await self.turn(Tts(), answer="Citadel is available.")
+        sent = await self.turn(Tts(), answer="The server is available.")
         self.assertEqual(sum(item["type"] == "audio.output.chunk" for item in sent), 10)
         elapsed = loop.time() - start
         # Unpaced lead of 4 chunks, then 6 paced chunks of 32 ms each.

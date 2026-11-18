@@ -314,7 +314,7 @@ zv_platform_report_t zv_platform_start(void)
         .status = approval_status == ZV_OK ? ZV_ERR_HARDWARE_GATE : approval_status,
         .detail = approval_status == ZV_OK
                       ? "M0 challenge and the M3 ES256 known-answer self-test passed; this does NOT prove a "
-                        "live Citadel approval, Hermes execution, or audit correlation, and the platform "
+                        "live gateway approval, Hermes execution, or audit correlation, and the platform "
                         "remains gated"
                       : "M3 approval self-test failed; all hardware gates remain closed",
     };

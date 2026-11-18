@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Loopback-only browser test server. All credentials and speech adapters are FIXTURES.
-ZV_CITADEL_GATEWAY_ROOT selects the actual Citadel gateway; otherwise a protocol fixture.
+ZV_GATEWAY_ROOT selects the actual voice gateway; otherwise a protocol fixture.
 """
 import asyncio
 import base64
@@ -118,7 +118,7 @@ async def fixture(ws):
 async def main():
     global loop
     loop = asyncio.get_running_loop()
-    source = os.getenv('ZV_CITADEL_GATEWAY_ROOT')
+    source = os.getenv('ZV_GATEWAY_ROOT')
     with tempfile.TemporaryDirectory(prefix='zenti-browser-fixture-') as tmp:
         temp = Path(tmp)
         openssl = os.getenv('ZV_TEST_OPENSSL') or shutil.which('openssl') or r'C:\Program Files\Git\usr\bin\openssl.exe'
@@ -177,7 +177,7 @@ async def main():
             https_port = site._server.sockets[0].getsockname()[1]
             object.__setattr__(config, 'origin', f'https://127.0.0.1:{https_port}')
             print(json.dumps({'url': config.origin, 'gateway': config.gateway,
-                'implementation': 'actual-citadel' if source else 'protocol-fixture'}), flush=True)
+                'implementation': 'actual-gateway' if source else 'protocol-fixture'}), flush=True)
             try:
                 await asyncio.Event().wait()
             finally:

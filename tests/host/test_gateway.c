@@ -36,7 +36,7 @@ static void test_origin_matches(void)
     ZV_CHECK(zv_gateway_origin_matches("wss://192.0.2.2:8443/", "wss://192.0.2.2:8443/"));
     ZV_CHECK(zv_gateway_origin_matches("wss://192.0.2.2:8443", "wss://192.0.2.2:8443/"));
     ZV_CHECK(zv_gateway_origin_matches("wss://Gateway.Invalid/ws", "wss://gateway.invalid:443/ws"));
-    /* 2026-10-14: a build pointed at the lab gateway while the credential was enrolled for Citadel. */
+    /* 2026-10-14: a build pointed at the lab gateway while the credential was enrolled for a different gateway. */
     ZV_CHECK(!zv_gateway_origin_matches("wss://192.0.2.10:8443/", "wss://192.0.2.2:8443/"));
     ZV_CHECK(!zv_gateway_origin_matches("wss://192.0.2.2:8444/", "wss://192.0.2.2:8443/"));
     ZV_CHECK(!zv_gateway_origin_matches("wss://192.0.2.2:8443/ws", "wss://192.0.2.2:8443/"));

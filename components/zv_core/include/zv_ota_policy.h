@@ -60,6 +60,8 @@ typedef enum {
     ZV_OTA_REASON_TOO_LARGE,
     ZV_OTA_REASON_UNSIGNED,
     ZV_OTA_REASON_DIGEST_MISMATCH,
+    ZV_OTA_REASON_SEQUENCE_GAP,
+    ZV_OTA_REASON_STALLED,
 } zv_ota_reason_t;
 
 /**
@@ -104,7 +106,32 @@ typedef struct {
     uint32_t expected_size; /**< from the accepted manifest */
     uint32_t received;      /**< bytes accepted so far, never exceeds expected_size */
     zv_ota_reason_t reason; /**< set when state becomes FAILED */
+    /* Sequenced-transfer bookkeeping. A transfer uses either zv_ota_slot_write()
+     * or zv_ota_slot_write_seq(), never both. */
+    uint32_t probation_started_ms; /**< when the new image entered probation */
+    uint32_t last_activity_ms;     /**< last accepted write, for stall detection */
+    uint16_t next_sequence;        /**< next expected transfer sequence number */
+    bool probation_started;       /**< explicit entry; timestamp zero is valid */
+    bool sequence_started;         /**< a sequenced transfer has begun */
 } zv_ota_slot_t;
+
+/**
+ * Bounds for a live update, taken from the rules the Hermes Gadget SDK applies
+ * to its OTA channel:
+ *
+ * - the new image boots on probation and is rolled back if it does not prove
+ *   itself within a bounded window (the SDK uses five minutes);
+ * - transfer frames carry consecutive sequence numbers and a gap abandons the
+ *   update (the SDK's "sequence" error);
+ * - a transfer that stops delivering data is abandoned rather than left pending
+ *   (the SDK's 30 second timeout).
+ *
+ * zv_core stays free of a clock: every function takes the current time from
+ * the caller, like the approval gate does.
+ */
+#define ZV_OTA_PROBATION_MS_DEFAULT 300000u
+#define ZV_OTA_STALL_TIMEOUT_MS_DEFAULT 30000u
+#define ZV_OTA_SEQUENCE_MAX 65535u
 
 void zv_ota_slot_init(zv_ota_slot_t *slot);
 
@@ -129,6 +156,40 @@ zv_status_t zv_ota_slot_boot_ok(zv_ota_slot_t *slot);
 
 /** Self-test failed: roll back to the previous slot. */
 zv_status_t zv_ota_slot_boot_failed(zv_ota_slot_t *slot);
+
+/**
+ * Records that the new image has booted into probation at now_ms. Only legal
+ * from AWAITING_CONFIRM: an image that is not waiting for confirmation has no
+ * probation window to enter.
+ */
+zv_status_t zv_ota_slot_begin_probation(zv_ota_slot_t *slot, uint32_t now_ms);
+
+/**
+ * True when the probation window has elapsed and the image has not confirmed
+ * itself. The caller must then roll back (zv_ota_slot_boot_failed) rather than
+ * leave the slot pending forever. A slot that never entered probation cannot
+ * expire.
+ */
+bool zv_ota_slot_probation_expired(const zv_ota_slot_t *slot, uint32_t now_ms,
+                                   uint32_t probation_ms);
+
+/**
+ * Accounts one sequenced transfer frame.
+ *
+ * The sequence number must be exactly the next expected one; a gap abandons
+ * the update with ZV_OTA_REASON_SEQUENCE_GAP rather than writing a hole into
+ * the image. A transfer that delivers no data for longer than stall_timeout_ms
+ * is abandoned with ZV_OTA_REASON_STALLED. The same size bounds as
+ * zv_ota_slot_write() apply, and the slot must be DOWNLOADING.
+ */
+zv_status_t zv_ota_slot_write_seq(zv_ota_slot_t *slot, uint16_t sequence, uint32_t chunk_len,
+                                   uint32_t now_ms, uint32_t stall_timeout_ms);
+
+/**
+ * True when no data has been accepted for longer than timeout_ms. Only a slot
+ * that is still DOWNLOADING can stall.
+ */
+bool zv_ota_slot_stalled(const zv_ota_slot_t *slot, uint32_t now_ms, uint32_t timeout_ms);
 
 const char *zv_ota_slot_state_name(zv_ota_slot_state_t state);
 

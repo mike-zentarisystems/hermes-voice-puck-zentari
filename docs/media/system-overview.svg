@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="730" viewBox="0 0 1440 730" role="img" aria-labelledby="title desc">
-  <title id="title">Zentari Voice: browser PWA and experimental puck</title>
+  <title id="title">Hermes Voice Agent: browser PWA and experimental puck</title>
   <desc id="desc">Current source architecture. The PWA uses an HTTPS session bridge and verified WSS. The experimental puck connects over TLS and HMAC. Both use the voice gateway with local speech services and a configured OpenAI-compatible backend. Direct Hermes integration is planned and is not selected by the current standalone entrypoint.</desc>
   <defs><linearGradient id="bg"><stop stop-color="#0a1020"/><stop offset="1" stop-color="#191021"/></linearGradient><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3z" fill="#9bd7ef"/></marker></defs>
   <rect width="1440" height="730" rx="28" fill="url(#bg)"/>

@@ -440,7 +440,7 @@ menu "Zentari Voice Puck"
             kid, an expired request, and a retired key must each fail closed.
 
             This proves the mbedtls verifier and the zv_core approval gate work
-            on real hardware. It does NOT prove a live Citadel approval flow:
+            on real hardware. It does NOT prove a live gateway approval flow:
             no Hermes action is executed, no gateway audit is correlated, and
             the platform ready flag stays false. Deliberately independent of
             ZV_M2_WSS_MODE, because the crypto path is local and must stay
