@@ -135,6 +135,10 @@ const char *zv_ota_reason_name(zv_ota_reason_t reason)
         return "unsigned";
     case ZV_OTA_REASON_DIGEST_MISMATCH:
         return "digest_mismatch";
+    case ZV_OTA_REASON_SEQUENCE_GAP:
+        return "sequence_gap";
+    case ZV_OTA_REASON_STALLED:
+        return "stalled";
     }
     return "unknown";
 }
@@ -188,6 +192,12 @@ zv_status_t zv_ota_slot_begin(zv_ota_slot_t *slot, uint32_t expected_size)
     slot->expected_size = expected_size;
     slot->received = 0u;
     slot->reason = ZV_OTA_REASON_NONE;
+    /* begin() also accepts FAILED: no bookkeeping from the old transfer may
+     * reject the retry's first frame or make its activity timestamp stale. */
+    slot->sequence_started = false;
+    slot->next_sequence = 0u;
+    slot->last_activity_ms = 0u;
+    slot->probation_started_ms = 0u;
     return ZV_OK;
 }
 
@@ -266,6 +276,87 @@ zv_status_t zv_ota_slot_boot_failed(zv_ota_slot_t *slot)
     return ZV_OK;
 }
 
+zv_status_t zv_ota_slot_begin_probation(zv_ota_slot_t *slot, uint32_t now_ms)
+{
+    if (slot == NULL) {
+        return ZV_ERR_INVALID_ARG;
+    }
+    if (slot->state != ZV_OTA_SLOT_AWAITING_CONFIRM) {
+        return ZV_ERR_INVALID_STATE;
+    }
+    slot->probation_started_ms = now_ms;
+    slot->last_activity_ms = now_ms;
+    return ZV_OK;
+}
+
+bool zv_ota_slot_probation_expired(const zv_ota_slot_t *slot, uint32_t now_ms,
+                                   uint32_t probation_ms)
+{
+    if (slot == NULL || probation_ms == 0u) {
+        return false;
+    }
+    /* Only an image that entered probation can expire. A confirmed slot has
+     * already proved itself and a failed one is already decided. */
+    if (slot->state != ZV_OTA_SLOT_AWAITING_CONFIRM) {
+        return false;
+    }
+    /* Subtraction rather than addition so the bound cannot wrap. */
+    return (uint32_t)(now_ms - slot->probation_started_ms) >= probation_ms;
+}
+
+bool zv_ota_slot_stalled(const zv_ota_slot_t *slot, uint32_t now_ms, uint32_t timeout_ms)
+{
+    if (slot == NULL || timeout_ms == 0u) {
+        return false;
+    }
+    if (slot->state != ZV_OTA_SLOT_DOWNLOADING) {
+        return false;
+    }
+    if (!slot->sequence_started) {
+        return false;
+    }
+    return (uint32_t)(now_ms - slot->last_activity_ms) >= timeout_ms;
+}
+
+zv_status_t zv_ota_slot_write_seq(zv_ota_slot_t *slot, uint16_t sequence, uint32_t chunk_len,
+                                   uint32_t now_ms, uint32_t stall_timeout_ms)
+{
+    if (slot == NULL) {
+        return ZV_ERR_INVALID_ARG;
+    }
+    if (slot->state != ZV_OTA_SLOT_DOWNLOADING) {
+        return ZV_ERR_INVALID_STATE;
+    }
+    if (chunk_len == 0u || chunk_len > ZV_OTA_SLOT_CHUNK_MAX) {
+        return ZV_ERR_INVALID_ARG;
+    }
+    /* A transfer that stopped delivering data is abandoned before the gap
+     * check, so a silent peer cannot keep a slot pending forever. */
+    if (slot->sequence_started && stall_timeout_ms != 0u &&
+        (uint32_t)(now_ms - slot->last_activity_ms) >= stall_timeout_ms) {
+        return slot_fail(slot, ZV_OTA_REASON_STALLED);
+    }
+    /* A gap in the sequence means bytes were lost. Writing past it would put a
+     * hole in the image, so the update is abandoned instead. */
+    if (slot->sequence_started && sequence != slot->next_sequence) {
+        return slot_fail(slot, ZV_OTA_REASON_SEQUENCE_GAP);
+    }
+    if (chunk_len > slot->expected_size - slot->received) {
+        return slot_fail(slot, ZV_OTA_REASON_TOO_LARGE);
+    }
+    slot->received += chunk_len;
+    slot->last_activity_ms = now_ms;
+    if (!slot->sequence_started) {
+        slot->sequence_started = true;
+        slot->next_sequence = (uint16_t)(sequence + 1u);
+    } else {
+        /* Sequence numbers are 16-bit and wrap; the comparison above accepts
+         * the wrap, and the counter follows it. */
+        slot->next_sequence = (uint16_t)(sequence + 1u);
+    }
+    return ZV_OK;
+}
+
 const char *zv_ota_slot_state_name(zv_ota_slot_state_t state)
 {
     switch (state) {
@@ -286,3 +377,4 @@ const char *zv_ota_slot_state_name(zv_ota_slot_state_t state)
     }
     return "unknown";
 }
+

@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.0-preview OTA hardening source — 2026-11-18
+
+- Forward-sync the four firmware sources changed by the OTA hardening work:
+  the OTA policy header and implementation, the network integration and the
+  OTA slot host tests. The published source now matches the firmware that was
+  reviewed and flashed on the lab puck.
+- Keep this repository's own work unchanged: the PWA fixes, the Nous media and
+  its separate licence, `eli10.md` and the Hermes Voice Agent naming all stay
+  as they are.
+- Regenerate `RELEASE-MANIFEST.json` on the result. The source archive and its
+  SHA-256 sidecar are attached to the prerelease.
+
 ## 0.1.0-preview plain-English docs and setup fixes — 2026-11-10
 
 - Add `eli10.md`, a plain-English overview of what the project is, what works
