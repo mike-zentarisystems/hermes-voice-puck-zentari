@@ -65,3 +65,13 @@ accepted device image and component-specific recovery record. Publishing a new
 source preview never authorizes overwriting a working Puck, changing eFuses or
 reconfiguring production services. Charging, signed approval, firmware recovery,
 human/phone accessibility and physical soak remain stable-release gates.
+
+## Runtime image updates
+
+The build installs the hash-locked CPython 3.13 wheels in a separate stage.
+The non-root Wolfi runtime includes Python, the native libraries used by speech
+models, and the application. When updating the image, refresh both base digests
+and the direct APK version pins in the Dockerfile. Transitive OS packages
+resolve from the signed Wolfi package repository at build time. CI scans the
+built image and fails on high or critical advisories. Exercise a local speech
+turn and a service restart when changing the runtime or native libraries.
