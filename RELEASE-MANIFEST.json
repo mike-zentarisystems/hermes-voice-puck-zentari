@@ -49,8 +49,8 @@
     },
     {
       "path": ".github/workflows/validate.yml",
-      "bytes": 2808,
-      "sha256": "a9567d8666dc08e0e87628e40dd2a6065cf6fd81054c8b07613d2c9b532cdd28"
+      "bytes": 2826,
+      "sha256": "e15bc0d1cbde980db29df8cee3439af8e855629f56212bb7e4474a507d121968"
     },
     {
       "path": ".gitignore",
@@ -604,8 +604,8 @@
     },
     {
       "path": "docs/INSTALL.md",
-      "bytes": 8428,
-      "sha256": "b7bbffaecae610ed5f538112780b2e26bc0be98e01ebdf0953d7f7771d7b39dc"
+      "bytes": 8587,
+      "sha256": "d8f71ff645b2556cc73760d05e222331b0d973b96cb52d0388e945665506c2b9"
     },
     {
       "path": "docs/LICENSES.md",
@@ -624,8 +624,8 @@
     },
     {
       "path": "docs/RELEASE-STATUS.md",
-      "bytes": 9732,
-      "sha256": "fcb58b17b45f2b1b99746f779eb157ab7a34fd307ba118b2d43ad175fabaf976"
+      "bytes": 12852,
+      "sha256": "5aa21262c09c59b1bf8e85b939a0f6b93262b656e597312c45f09e263af493a8"
     },
     {
       "path": "docs/RELEASE.md",
@@ -1384,8 +1384,8 @@
     },
     {
       "path": "tests/test_packaging.py",
-      "bytes": 3875,
-      "sha256": "c3d21d453239f054382da924fce642ccdcac6cd0bd1cb11105a2e556232adf79"
+      "bytes": 7230,
+      "sha256": "a17fde8c489a1d67a9ed0595c2a97eed7d52df671a96ec3ea631e4b5cb610e7e"
     },
     {
       "path": "tests/test_platform_dispatch.py",
