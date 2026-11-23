@@ -51,4 +51,10 @@ jobs:
         run: |
           docker compose config --quiet
           docker build --tag zenti-public:test .
+      - name: Check the runtime image for high and critical advisories
+        run: |
+          docker save --output "$RUNNER_TEMP/voice-runtime.tar" zenti-public:test
+          docker run --rm -v "$RUNNER_TEMP/voice-runtime.tar:/image.tar:ro" \
+            aquasec/trivy:0.76.2@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb \
+            image --scanners vuln --severity HIGH,CRITICAL --exit-code 1 --no-progress --input /image.tar
   # Firmware, real-model, independent security, physical and soak gates are separate.
